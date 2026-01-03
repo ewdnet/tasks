@@ -5,7 +5,16 @@ import { eq } from 'drizzle-orm';
 
 export const load = (async () => {
 	const getCategories = async () => {
-		const categories = await db.query.category.findMany();
+		const categories = await db.query.category.findMany({
+			with: {
+				tasks: {
+					columns: {
+						id: true,
+						progress: true
+					}
+				}
+			}
+		});
 		return categories;
 	};
 

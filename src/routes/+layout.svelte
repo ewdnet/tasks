@@ -9,20 +9,19 @@
 	const outer = 'px-2 sm:py-4';
 	const inner = 'w-full max-w-xl mx-auto  py-4 space-y-4';
 	const border_t = 'border-t border-t-primary-200-800';
-	const border_b = 'border-b border-b-primary-200-800';
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
 <header class={outer}>
-	<div class="{inner} {border_b}">
+	<div class="{inner} flex items-center justify-between gap-4">
 		<Header />
 	</div>
 </header>
 <main class="flex-auto {outer}">
-	<div class={inner}>
+	<article class={inner}>
 		{@render children()}
-	</div>
+	</article>
 </main>
 <footer class={outer}>
 	<div class="{inner} {border_t}">

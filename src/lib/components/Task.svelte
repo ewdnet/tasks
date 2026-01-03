@@ -1,9 +1,12 @@
 <script lang="ts">
+	import type { CategoryItem, TaskItem } from '$lib/types';
 	import { enhance } from '$app/forms';
+	import { categorySelected } from '$lib/stores.svelte';
 	import { ChevronDownIcon } from '@lucide/svelte';
 	import { Accordion } from '@skeletonlabs/skeleton-svelte';
 	import { slide } from 'svelte/transition';
-	let { task, categories } = $props();
+
+	let { task, categories } = $props<{ task: TaskItem; categories: CategoryItem[] }>();
 </script>
 
 <li class="border border-primary-500">
@@ -33,8 +36,11 @@
 						</div>
 						<footer class="flex items-center justify-between gap-4">
 							<p>
-								<small
-									>Category: {categories.find((c: any) => c.id === task.categoryId)?.name}</small
+								<button
+									onclick={() => (categorySelected.value = task.categoryId)}
+									class="btn btn-sm"
+									>Category: {categories.find((c: CategoryItem) => c.id === task.categoryId)
+										?.name}</button
 								>
 							</p>
 							<p class="flex flex-col flex-wrap items-end gap-1 text-right">

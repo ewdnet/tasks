@@ -1,8 +1,7 @@
-// place files you want to import through the `$lib` alias in this folder.
 // REFS
 
 // refNumber
-function refNumber(initial: number) {
+function refNumber(initial: number | null) {
 	let value = $state(initial);
 
 	return {
@@ -31,8 +30,23 @@ function refString(initial: string) {
 
 // STORES
 
+// tasks overall progress
+export const progressOverall = refNumber(null);
+
 // pageView
 export const pageView = refString('tasks');
 
-// ?
-export const taskspaginator = refNumber(1);
+// searchTerm
+export const searchTerm = refString('');
+
+// categories status
+export const categoryStatus = refString('');
+
+// filter (category)
+export const categorySelected = refString('');
+
+// filter (status)
+export const taskStatus = refString('');
+
+// Paginator Reset (scips to page 1 when filters change)
+export const paginatorReset = refNumber(1);
