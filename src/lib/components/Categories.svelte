@@ -5,20 +5,18 @@
 <script lang="ts">
 	import { Accordion } from '@skeletonlabs/skeleton-svelte';
 
-	type CategoryItem = {
-		id: string;
-		name: string;
-		// present because the server load includes it; used elsewhere
-		tasks?: { id: string; progress: number }[];
-	};
-
-	let { categories } = $props<{ categories: CategoryItem[] }>();
+	let { categories, scopeCategories } = $props<{
+		categories: CategoryItem[];
+		scopeCategories: CategoryItem[];
+	}>();
 
 	// Pagination
 	import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/svelte';
 	import { Pagination } from '@skeletonlabs/skeleton-svelte';
 	import Category from './Category.svelte';
 	import { fade } from 'svelte/transition';
+	import type { CategoryItem } from '$lib/types';
+	import CategoryStatus from './CategoryStatus.svelte';
 
 	let page = $state(1);
 
@@ -38,12 +36,7 @@
 		{/key}
 	</Accordion>
 	<div class="flex items-center justify-between">
-		<ul class="flex items-center gap-2">
-			<li>
-				<strong>Total Categories:</strong>
-				{categories.length}
-			</li>
-		</ul>
+		<CategoryStatus {scopeCategories} />
 		{#if categories.length > PAGE_SIZE}
 			<Pagination
 				count={categories.length}

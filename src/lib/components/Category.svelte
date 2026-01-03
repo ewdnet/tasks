@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { categorySelected, pageView } from '$lib/stores.svelte';
 	import { ChevronDownIcon } from '@lucide/svelte';
 	import { Accordion } from '@skeletonlabs/skeleton-svelte';
 	import { slide } from 'svelte/transition';
+
 	let { category } = $props();
 </script>
 
@@ -20,6 +22,12 @@
 			{#snippet element(attributes)}
 				{#if !attributes.hidden}
 					<div class="pb-4" {...attributes} transition:slide={{ duration: 200 }}>
+						<div class="pb-4">
+							<button
+								onclick={() => ((categorySelected.value = category.id), (pageView.value = 'tasks'))}
+								class="btn btn-sm">Show all Tasks in the Category {category.name}</button
+							>
+						</div>
 						<div>
 							<form method="post" action="?/delcatg" use:enhance>
 								<input type="hidden" name="id" value={category.id} />
