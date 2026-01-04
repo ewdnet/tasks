@@ -2,16 +2,27 @@
 	import { categoryStatus } from '$lib/stores.svelte';
 	import type { CategoryItem } from '$lib/types';
 	import { Portal, Tooltip } from '@skeletonlabs/skeleton-svelte';
+	import { pageView, searchTerm } from '$lib/stores.svelte';
 
-	let { scopeCategories } = $props<{ scopeCategories: CategoryItem[] }>();
+	let { categories } = $props<{ categories: CategoryItem[] }>();
+
+	function baseCategoriesForCounts() {
+		let result = categories;
+		if (pageView.value === 'categories' && searchTerm.value.length > 0) {
+			const q = searchTerm.value.toLowerCase();
+			result = result.filter((category: CategoryItem) => category.name.toLowerCase().includes(q));
+		}
+		return result;
+	}
 
 	// Empty Categories
 	function emptyCategories() {
-		return scopeCategories.filter((category: CategoryItem) => category.tasks.length === 0).length;
+		return baseCategoriesForCounts().filter((category: CategoryItem) => category.tasks.length === 0)
+			.length;
 	}
 	// Categories in Progress
 	function inprogressCategories() {
-		return scopeCategories.filter((category: CategoryItem) => {
+		return baseCategoriesForCounts().filter((category: CategoryItem) => {
 			const total = category.tasks.length;
 			const completed = category.tasks.filter((task) => task.progress === 100).length;
 			return total > 0 && completed < total;
@@ -19,7 +30,7 @@
 	}
 	// Completed Categories
 	function completedCategories() {
-		return scopeCategories.filter((category: CategoryItem) => {
+		return baseCategoriesForCounts().filter((category: CategoryItem) => {
 			const total = category.tasks.length;
 			const completed = category.tasks.filter((task) => task.progress === 100).length;
 			return total > 0 && total === completed;
@@ -30,16 +41,15 @@
 <ul class="flex items-center gap-2">
 	<li>
 		<Tooltip positioning={{ placement: 'top' }}>
-			<Tooltip.Trigger>
-				<button
-					onclick={() =>
-						(categoryStatus.value =
-							categoryStatus.value === 'emptycategories' ? '' : 'emptycategories')}
-					disabled={emptyCategories() === 0}
-					class="btn-icon btn btn-icon-sm rounded-full border border-error-500 bg-error-500/15"
-				>
-					{emptyCategories()}
-				</button>
+			<Tooltip.Trigger
+				type="button"
+				onclick={() =>
+					(categoryStatus.value =
+						categoryStatus.value === 'emptycategories' ? '' : 'emptycategories')}
+				disabled={emptyCategories() === 0}
+				class="btn-icon btn btn-icon-sm rounded-full border border-error-500 bg-error-500/15"
+			>
+				{emptyCategories()}
 			</Tooltip.Trigger>
 			<Portal>
 				<Tooltip.Positioner>
@@ -61,16 +71,15 @@
 	</li>
 	<li>
 		<Tooltip positioning={{ placement: 'top' }}>
-			<Tooltip.Trigger>
-				<button
-					onclick={() =>
-						(categoryStatus.value =
-							categoryStatus.value === 'inprogresscategories' ? '' : 'inprogresscategories')}
-					disabled={inprogressCategories() === 0}
-					class="btn-icon btn btn-icon-sm rounded-full border border-warning-500 bg-warning-500/15"
-				>
-					{inprogressCategories()}
-				</button>
+			<Tooltip.Trigger
+				type="button"
+				onclick={() =>
+					(categoryStatus.value =
+						categoryStatus.value === 'inprogresscategories' ? '' : 'inprogresscategories')}
+				disabled={inprogressCategories() === 0}
+				class="btn-icon btn btn-icon-sm rounded-full border border-warning-500 bg-warning-500/15"
+			>
+				{inprogressCategories()}
 			</Tooltip.Trigger>
 			<Portal>
 				<Tooltip.Positioner>
@@ -92,16 +101,15 @@
 	</li>
 	<li>
 		<Tooltip positioning={{ placement: 'top' }}>
-			<Tooltip.Trigger>
-				<button
-					onclick={() =>
-						(categoryStatus.value =
-							categoryStatus.value === 'completedcategories' ? '' : 'completedcategories')}
-					disabled={completedCategories() === 0}
-					class="btn-icon btn btn-icon-sm rounded-full border border-success-500 bg-success-500/15"
-				>
-					{completedCategories()}
-				</button>
+			<Tooltip.Trigger
+				type="button"
+				onclick={() =>
+					(categoryStatus.value =
+						categoryStatus.value === 'completedcategories' ? '' : 'completedcategories')}
+				disabled={completedCategories() === 0}
+				class="btn-icon btn btn-icon-sm rounded-full border border-success-500 bg-success-500/15"
+			>
+				{completedCategories()}
 			</Tooltip.Trigger>
 			<Portal>
 				<Tooltip.Positioner>

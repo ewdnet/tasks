@@ -1,35 +1,53 @@
 <script lang="ts">
 	import type { TaskItem } from '$lib/types';
-	import { taskStatus } from '$lib/stores.svelte';
+	import { categorySelected, pageView, searchTerm, taskStatus } from '$lib/stores.svelte';
 	import { Portal, Tooltip } from '@skeletonlabs/skeleton-svelte';
 
-	let { scopeTasks } = $props<{ scopeTasks: TaskItem[] }>();
+	let { tasks } = $props<{ tasks: TaskItem[] }>();
+
+	function baseTasksForCounts() {
+		let result = tasks;
+
+		if (categorySelected.value !== '') {
+			result = result.filter((task: TaskItem) => task.categoryId === categorySelected.value);
+		}
+
+		if (pageView.value === 'tasks' && searchTerm.value.length > 0) {
+			const q = searchTerm.value.toLowerCase();
+			result = result.filter(
+				(task: TaskItem) =>
+					task.title.toLowerCase().includes(q) || task.content?.toLowerCase().includes(q)
+			);
+		}
+
+		return result;
+	}
 
 	// New Tasks
 	function newTasks() {
-		return scopeTasks.filter((task: TaskItem) => task.progress === 0).length;
+		return baseTasksForCounts().filter((task: TaskItem) => task.progress === 0).length;
 	}
 	// In Progress Tasks
 	function inprogressTasks() {
-		return scopeTasks.filter((task: TaskItem) => task.progress > 0 && task.progress < 100).length;
+		return baseTasksForCounts().filter((task: TaskItem) => task.progress > 0 && task.progress < 100)
+			.length;
 	}
 	// In Progress Tasks
 	function completedTasks() {
-		return scopeTasks.filter((task: TaskItem) => task.progress === 100).length;
+		return baseTasksForCounts().filter((task: TaskItem) => task.progress === 100).length;
 	}
 </script>
 
 <ul class="flex items-center gap-2">
 	<li>
 		<Tooltip positioning={{ placement: 'top' }}>
-			<Tooltip.Trigger>
-				<button
-					onclick={() => (taskStatus.value = taskStatus.value === 'new' ? '' : 'new')}
-					disabled={newTasks() === 0}
-					class="btn-icon btn btn-icon-sm rounded-full border border-error-500 bg-error-500/15"
-				>
-					{newTasks()}
-				</button>
+			<Tooltip.Trigger
+				type="button"
+				onclick={() => (taskStatus.value = taskStatus.value === 'new' ? '' : 'new')}
+				disabled={newTasks() === 0}
+				class="btn-icon btn btn-icon-sm rounded-full border border-error-500 bg-error-500/15"
+			>
+				{newTasks()}
 			</Tooltip.Trigger>
 			<Portal>
 				<Tooltip.Positioner>
@@ -47,14 +65,13 @@
 	</li>
 	<li>
 		<Tooltip positioning={{ placement: 'top' }}>
-			<Tooltip.Trigger>
-				<button
-					onclick={() => (taskStatus.value = taskStatus.value === 'current' ? '' : 'current')}
-					disabled={inprogressTasks() === 0}
-					class="btn-icon btn btn-icon-sm rounded-full border border-warning-500 bg-warning-500/15"
-				>
-					{inprogressTasks()}
-				</button>
+			<Tooltip.Trigger
+				type="button"
+				onclick={() => (taskStatus.value = taskStatus.value === 'current' ? '' : 'current')}
+				disabled={inprogressTasks() === 0}
+				class="btn-icon btn btn-icon-sm rounded-full border border-warning-500 bg-warning-500/15"
+			>
+				{inprogressTasks()}
 			</Tooltip.Trigger>
 			<Portal>
 				<Tooltip.Positioner>
@@ -76,14 +93,13 @@
 	</li>
 	<li>
 		<Tooltip positioning={{ placement: 'top' }}>
-			<Tooltip.Trigger>
-				<button
-					onclick={() => (taskStatus.value = taskStatus.value === 'completed' ? '' : 'completed')}
-					disabled={completedTasks() === 0}
-					class="btn-icon btn btn-icon-sm rounded-full border border-success-500 bg-success-500/15"
-				>
-					{completedTasks()}
-				</button>
+			<Tooltip.Trigger
+				type="button"
+				onclick={() => (taskStatus.value = taskStatus.value === 'completed' ? '' : 'completed')}
+				disabled={completedTasks() === 0}
+				class="btn-icon btn btn-icon-sm rounded-full border border-success-500 bg-success-500/15"
+			>
+				{completedTasks()}
 			</Tooltip.Trigger>
 			<Portal>
 				<Tooltip.Positioner>

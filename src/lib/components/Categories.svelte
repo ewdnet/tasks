@@ -3,22 +3,17 @@
 </script>
 
 <script lang="ts">
-	import { Accordion } from '@skeletonlabs/skeleton-svelte';
+	import type { CategoryItem } from '$lib/types';
+	import { Accordion, Pagination } from '@skeletonlabs/skeleton-svelte';
+	import Category from '$lib/components/Category.svelte';
+	import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/svelte';
+	import { fade } from 'svelte/transition';
+	import { categoryStatus, paginatorReset, searchTerm } from '$lib/stores.svelte';
 
-	let { categories, scopeCategories } = $props<{
-		categories: CategoryItem[];
-		scopeCategories: CategoryItem[];
-	}>();
+	let { categories } = $props<{ categories: CategoryItem[] }>();
 
 	// Pagination
-	import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/svelte';
-	import { Pagination } from '@skeletonlabs/skeleton-svelte';
-	import Category from './Category.svelte';
-	import { fade } from 'svelte/transition';
-	import type { CategoryItem } from '$lib/types';
-	import CategoryStatus from './CategoryStatus.svelte';
-
-	let page = $state(1);
+	const page = $derived(paginatorReset.value ?? 1);
 
 	const start = $derived((page - 1) * PAGE_SIZE);
 	const end = $derived(start + PAGE_SIZE);
@@ -27,7 +22,7 @@
 
 {#if categories.length}
 	<Accordion collapsible>
-		{#key page}
+		{#key categoryStatus.value}
 			<ul class="space-y-2 pb-4" in:fade>
 				{#each paginatedCategories as category (category.id)}
 					<Category {category} />
@@ -35,14 +30,26 @@
 			</ul>
 		{/key}
 	</Accordion>
-	<div class="flex items-center justify-between">
-		<CategoryStatus {scopeCategories} />
+	<div class="flex justify-between">
+		<div>
+			<small>
+				{#if categoryStatus.value !== '' || searchTerm.value !== ''}
+					Filtered Categories:
+				{:else}
+					Total Categories:
+				{/if}
+				{categories.length}
+			</small>
+		</div>
 		{#if categories.length > PAGE_SIZE}
 			<Pagination
+				defaultPage={1}
 				count={categories.length}
 				pageSize={PAGE_SIZE}
 				{page}
-				onPageChange={(event: { page: number }) => (page = event.page)}
+				onPageChange={(event: { page: number }) => {
+					paginatorReset.value = event.page;
+				}}
 			>
 				<Pagination.PrevTrigger>
 					<ArrowLeftIcon class="size-4" />

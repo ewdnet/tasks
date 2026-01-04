@@ -9,7 +9,7 @@
 
 	const pageTitle = $derived(pageView.value.charAt(0).toUpperCase() + pageView.value.slice(1));
 
-	const outer = 'px-2 sm:py-4';
+	const outer = 'px-2';
 	const inner = 'w-full max-w-xl mx-auto  py-4 space-y-4';
 	const border_t = 'border-t border-t-primary-200-800';
 </script>

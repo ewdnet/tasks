@@ -4,17 +4,15 @@
 
 <script lang="ts">
 	import type { CategoryItem, TaskItem } from '$lib/types';
-	import { paginatorReset } from '$lib/stores.svelte';
-	import Task from './Task.svelte';
+	import { categorySelected, paginatorReset, searchTerm, taskStatus } from '$lib/stores.svelte';
+	import Task from '$lib/components/Task.svelte';
 	import { Accordion, Pagination } from '@skeletonlabs/skeleton-svelte';
 	import { fade } from 'svelte/transition';
 	import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/svelte';
-	import TaskStatus from './TaskStatus.svelte';
 
-	let { categories, tasks, scopeTasks } = $props<{
+	let { categories, tasks } = $props<{
 		categories: CategoryItem[];
 		tasks: TaskItem[];
-		scopeTasks: TaskItem[];
 	}>();
 
 	// Pagination
@@ -26,7 +24,7 @@
 
 {#if tasks.length}
 	<Accordion collapsible>
-		{#key page}
+		{#key taskStatus.value}
 			<ul class="space-y-2 pb-4" in:fade>
 				{#each paginatedTasks as task (task.id)}
 					<Task {task} {categories} />
@@ -34,8 +32,17 @@
 			</ul>
 		{/key}
 	</Accordion>
-	<div class="flex items-center justify-between">
-		<TaskStatus {scopeTasks} />
+	<div class="flex justify-between">
+		<div>
+			<small>
+				{#if taskStatus.value !== '' || categorySelected.value !== '' || searchTerm.value !== ''}
+					Filtered Tasks:
+				{:else}
+					Total Tasks:
+				{/if}
+				{tasks.length}
+			</small>
+		</div>
 		{#if tasks.length > PAGE_SIZE}
 			<Pagination
 				defaultPage={1}
