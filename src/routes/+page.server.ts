@@ -19,7 +19,9 @@ export const load = (async () => {
 	};
 
 	const getTasks = async () => {
-		const tasks = await db.query.task.findMany();
+		const tasks = await db.query.task.findMany({
+			orderBy: (task, { desc }) => [desc(task.updatedAt)]
+		});
 		return tasks;
 	};
 
@@ -30,13 +32,23 @@ export const load = (async () => {
 }) satisfies PageServerLoad;
 
 export const actions = {
-	catg: async (event) => {
+	category: async (event) => {
 		const formData = await event.request.formData();
 		const id = crypto.randomUUID() as string;
 		const name = formData.get('name') as string;
 
 		if (name) {
 			await db.insert(category).values({ id, name });
+		}
+
+		return { success: true };
+	},
+	categorydelete: async (event) => {
+		const formData = await event.request.formData();
+		const id = formData.get('id') as string;
+
+		if (id) {
+			await db.delete(category).where(eq(category.id, id));
 		}
 
 		return { success: true };
@@ -57,30 +69,27 @@ export const actions = {
 
 		return { success: true };
 	},
-	edittask: async (event) => {
+	taskedit: async (event) => {
 		const formData = await event.request.formData();
 		const id = formData.get('id') as string;
+		const categoryId = formData.get('categoryId') as string;
 		const title = formData.get('title') as string;
 		const content = formData.get('content') as string;
+		const progressValue = formData.get('progress');
+		const progress =
+			typeof progressValue === 'string' && progressValue.trim() !== '' ? Number(progressValue) : 0;
 		const updatedAt = new Date();
 
 		if (id && title) {
-			await db.update(task).set({ title, content, updatedAt }).where(eq(task.id, id));
+			await db
+				.update(task)
+				.set({ title, categoryId, content, progress, updatedAt })
+				.where(eq(task.id, id));
 		}
 
 		return { success: true };
 	},
-	delcatg: async (event) => {
-		const formData = await event.request.formData();
-		const id = formData.get('id') as string;
-
-		if (id) {
-			await db.delete(category).where(eq(category.id, id));
-		}
-
-		return { success: true };
-	},
-	deltask: async (event) => {
+	taskdelete: async (event) => {
 		const formData = await event.request.formData();
 		const id = formData.get('id') as string;
 

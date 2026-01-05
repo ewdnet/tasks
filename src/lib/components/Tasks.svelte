@@ -24,7 +24,7 @@
 
 {#if tasks.length}
 	<Accordion collapsible>
-		{#key taskStatus.value}
+		{#key taskStatus.value || categorySelected.value || paginatorReset.value}
 			<ul class="space-y-2 pb-4" in:fade>
 				{#each paginatedTasks as task (task.id)}
 					<Task {task} {categories} />

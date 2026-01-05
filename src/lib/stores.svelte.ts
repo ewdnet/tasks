@@ -50,3 +50,9 @@ export const taskStatus = refString('');
 
 // Paginator Reset (scips to page 1 when filters change)
 export const paginatorReset = refNumber(1);
+
+// task being edited
+export const taskEdit = refString('');
+
+// task being deleted
+export const taskDelete = refString('');

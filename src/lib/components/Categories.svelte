@@ -22,7 +22,7 @@
 
 {#if categories.length}
 	<Accordion collapsible>
-		{#key categoryStatus.value}
+		{#key categoryStatus.value || paginatorReset.value}
 			<ul class="space-y-2 pb-4" in:fade>
 				{#each paginatedCategories as category (category.id)}
 					<Category {category} />

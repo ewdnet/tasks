@@ -4,7 +4,7 @@
 
 <span>
 	{#if searchTerm.value !== ''}
-		"{searchTerm.value}" in
+		Search "{searchTerm.value}" in
 	{/if}
 </span>
 <span>
@@ -15,6 +15,6 @@
 	{:else if categoryStatus.value === 'completedcategories'}
 		Completed Categories
 	{:else}
-		All Categories
+		Categories
 	{/if}
 </span>

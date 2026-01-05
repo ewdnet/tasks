@@ -26,7 +26,7 @@
 	{:else if taskStatus.value === 'completed'}
 		Completed Tasks
 	{:else}
-		All Tasks
+		Tasks
 	{/if}
 </span>
 {#if categorySelected.value !== ''}

@@ -9,7 +9,7 @@ export type CategoryItem = {
 export type TaskItem = {
 	id: string;
 	title: string;
-	content?: string | null;
+	content: string | null;
 	progress: number;
 	categoryId: string;
 	createdAt: Date;

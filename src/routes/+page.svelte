@@ -21,7 +21,8 @@
 	} from '$lib/stores.svelte';
 
 	const { data } = $props() as PageProps;
-	let { categories, tasks } = $derived(data);
+	let categories = $state<CategoryItem[]>([]);
+	let tasks = $state<TaskItem[]>([]);
 
 	type CategoryTaskItem = CategoryItem extends { tasks: Array<infer T> } ? T : never;
 
@@ -34,14 +35,15 @@
 	});
 
 	$effect(() => {
-		let progress: number = 0;
-		progressOverall.value = null;
-		setTimeout(() => {
-			if (tasks.length > 0) {
-				tasks.map((e: TaskItem) => (progress += e.progress));
-				progressOverall.value = Math.round(progress / tasks.length);
-			}
-		}, 400);
+		const total = tasks.length;
+		if (total === 0) {
+			progressOverall.value = null;
+			return;
+		}
+
+		let sum = 0;
+		for (const task of tasks) sum += task.progress;
+		progressOverall.value = Math.round(sum / total);
 	});
 
 	// Filtering

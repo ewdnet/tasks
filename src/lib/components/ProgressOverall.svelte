@@ -9,7 +9,7 @@
 		<Progress.ValueText />
 	</div>
 	<Progress.Circle>
-		<Progress.CircleTrack />
-		<Progress.CircleRange />
+		<Progress.CircleTrack class="stroke-error-500/20" />
+		<Progress.CircleRange class="stroke-success-500/60" />
 	</Progress.Circle>
 </Progress>

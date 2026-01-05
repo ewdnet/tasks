@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import { pageView } from '$lib/stores.svelte';
+	import { pageView, paginatorReset } from '$lib/stores.svelte';
 	import { ListFilterPlusIcon } from '@lucide/svelte';
 	import { Dialog, Portal } from '@skeletonlabs/skeleton-svelte';
 
@@ -26,17 +26,12 @@
 						action="?/task"
 						use:enhance={() => {
 							return async ({ result, update }) => {
-								// keep SvelteKit's default behavior (updates form, etc.)
 								await update();
-
 								if (result.type === 'success') {
-									// your previous onSuccess logic here
-									// e.g. close modal, show toast, navigate, etc.
 									await invalidateAll();
 									pageView.value = 'tasks';
+									paginatorReset.value = 1;
 								}
-
-								// ensures action result is applied (redirects, errors, etc.)
 								await applyAction(result);
 							};
 						}}

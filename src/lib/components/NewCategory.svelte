@@ -15,7 +15,7 @@
 			<Dialog.Content class="w-md space-y-2 card bg-surface-100-900 p-4 shadow-xl">
 				<Dialog.Title class="text-2xl font-bold">Add New Category</Dialog.Title>
 				<Dialog.Description>
-					<form class="space-y-4" method="post" action="?/catg" use:enhance>
+					<form class="space-y-4" method="post" action="?/category" use:enhance>
 						<label for="name" class="label">
 							<input class="input" name="name" />
 						</label>

@@ -8,7 +8,8 @@
 		ChevronDownIcon,
 		CircleCheckBigIcon,
 		CircleDashedIcon,
-		CircleOffIcon
+		CircleOffIcon,
+		TrashIcon
 	} from '@lucide/svelte';
 	const iconSize = 16;
 
@@ -24,18 +25,18 @@
 	};
 </script>
 
-<li>
-	<Accordion.Item value={category.id} class="preset-outlined-primary-500">
+<li class="overflow-hidden card preset-filled-surface-50-950">
+	<Accordion.Item value={category.id}>
 		<h3 class="relative">
 			<Accordion.ItemTrigger class="flex items-center justify-between gap-2 font-bold">
 				<div class="flex items-center gap-2">
 					<span>
 						{#if categoryProgress() === 100}
-							<CircleCheckBigIcon size={iconSize} class="text-success-500" />
+							<CircleCheckBigIcon size={iconSize} class="text-success-500/50" />
 						{:else if categoryProgress() > 0 && categoryProgress() < 100}
-							<CircleDashedIcon size={iconSize} class="text-warning-500" />
+							<CircleDashedIcon size={iconSize} class="text-warning-500/50" />
 						{:else}
-							<CircleOffIcon size={iconSize} class="text-error-500" />
+							<CircleOffIcon size={iconSize} class="text-error-500/50" />
 						{/if}
 					</span>
 					<span>{category.name}</span>
@@ -44,11 +45,11 @@
 					<ChevronDownIcon class="h-5 w-5 transition group-data-[state=open]:rotate-180" />
 				</Accordion.ItemIndicator>
 			</Accordion.ItemTrigger>
-			<div class="absolute bottom-0.5 left-0 -z-10 w-full px-4">
+			<div class="absolute bottom-0 left-0 w-full px-4">
 				<Progress value={categoryProgress()} class="">
-					<Progress.Track class="h-0.5 bg-transparent">
+					<Progress.Track class="h-0.5 bg-error-500/20">
 						<Progress.Range
-							class={categoryProgress() === 100 ? 'bg-success-500/50' : 'bg-warning-500/50'}
+							class={categoryProgress() === 100 ? 'bg-success-500/40' : 'bg-warning-500/50'}
 						/>
 					</Progress.Track>
 				</Progress>
@@ -72,12 +73,16 @@
 							{/if}
 						</div>
 						<div>
-							<form method="post" action="?/delcatg" use:enhance>
+							<form method="post" action="?/categorydelete" use:enhance>
 								<input type="hidden" name="id" value={category.id} />
 								<div class="text-center">
-									<button type="submit" class="btn preset-filled-error-200-800 btn-sm"
-										>Delete Category</button
+									<button
+										type="submit"
+										class="btn preset-outlined-error-200-800 btn-sm text-error-500"
 									>
+										<TrashIcon size={iconSize} />
+										Delete
+									</button>
 								</div>
 							</form>
 						</div>
