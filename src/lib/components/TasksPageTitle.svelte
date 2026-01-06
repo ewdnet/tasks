@@ -2,6 +2,7 @@
 	import type { CategoryItem } from '$lib/types';
 	import { categorySelected, searchTerm, taskStatus } from '$lib/stores.svelte';
 	import { RefreshCcwIcon } from '@lucide/svelte';
+	import { Portal, Tooltip } from '@skeletonlabs/skeleton-svelte';
 
 	let { categories } = $props<{ categories: CategoryItem[] }>();
 
@@ -31,10 +32,25 @@
 </span>
 {#if categorySelected.value !== ''}
 	<span>in the Category "{categoryName}"</span>
-	<button
-		onclick={() => (categorySelected.value = '')}
-		class="btn-icon btn btn-icon-sm rounded-full preset-outlined-primary-500 bg-primary-500/15"
-	>
-		<RefreshCcwIcon size={16} />
-	</button>
+	<Tooltip positioning={{ placement: 'top' }}>
+		<Tooltip.Trigger
+			type="button"
+			onclick={() => (categorySelected.value = '')}
+			class="btn-icon btn btn-icon-sm rounded-full preset-outlined-primary-500 bg-primary-500/15"
+		>
+			<RefreshCcwIcon size={16} />
+		</Tooltip.Trigger>
+		<Portal>
+			<Tooltip.Positioner>
+				<Tooltip.Content class="card preset-filled-primary-800-200 p-2">
+					<span>Reset category filter</span>
+					<Tooltip.Arrow
+						class="[--arrow-background:var(--color-primary-800-200)] [--arrow-size:--spacing(2)]"
+					>
+						<Tooltip.ArrowTip />
+					</Tooltip.Arrow>
+				</Tooltip.Content>
+			</Tooltip.Positioner>
+		</Portal>
+	</Tooltip>
 {/if}

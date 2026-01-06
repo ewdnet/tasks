@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { TaskItem } from '$lib/types';
-	import { enhance } from '$app/forms';
 	import { categorySelected, pageView } from '$lib/stores.svelte';
 	import { Accordion, Progress } from '@skeletonlabs/skeleton-svelte';
 	import { slide } from 'svelte/transition';
@@ -8,9 +7,9 @@
 		ChevronDownIcon,
 		CircleCheckBigIcon,
 		CircleDashedIcon,
-		CircleOffIcon,
-		TrashIcon
+		CircleOffIcon
 	} from '@lucide/svelte';
+	import CategoryDelete from './CategoryDelete.svelte';
 	const iconSize = 16;
 
 	let { category } = $props();
@@ -27,7 +26,7 @@
 
 <li class="overflow-hidden card preset-filled-surface-50-950">
 	<Accordion.Item value={category.id}>
-		<h3 class="relative">
+		<h2 class="relative h4">
 			<Accordion.ItemTrigger class="flex items-center justify-between gap-2 font-bold">
 				<div class="flex items-center gap-2">
 					<span>
@@ -54,7 +53,7 @@
 					</Progress.Track>
 				</Progress>
 			</div>
-		</h3>
+		</h2>
 		<Accordion.ItemContent>
 			{#snippet element(attributes)}
 				{#if !attributes.hidden}
@@ -72,19 +71,8 @@
 								<small>No Tasks in this Category.</small>
 							{/if}
 						</div>
-						<div>
-							<form method="post" action="?/categorydelete" use:enhance>
-								<input type="hidden" name="id" value={category.id} />
-								<div class="text-center">
-									<button
-										type="submit"
-										class="btn preset-outlined-error-200-800 btn-sm text-error-500"
-									>
-										<TrashIcon size={iconSize} />
-										Delete
-									</button>
-								</div>
-							</form>
+						<div class="flex justify-center">
+							<CategoryDelete {category} />
 						</div>
 					</div>
 				{/if}

@@ -38,6 +38,7 @@
 	}
 </script>
 
+{#if categories.length}
 <ul class="flex items-center gap-2">
 	<li>
 		<Tooltip positioning={{ placement: 'top' }}>
@@ -130,3 +131,4 @@
 		</Tooltip>
 	</li>
 </ul>
+{/if}

@@ -1,10 +1,7 @@
 <script lang="ts">
 	import type { CategoryItem, TaskItem } from '$lib/types';
 	import { Accordion, Progress } from '@skeletonlabs/skeleton-svelte';
-	import { taskDelete, taskEdit } from '$lib/stores.svelte';
 	import TaskContent from '$lib/components/TaskContent.svelte';
-	import TaskEdit from '$lib/components/TaskEdit.svelte';
-	import TaskDelete from '$lib/components/TaskDelete.svelte';
 	import { slide } from 'svelte/transition';
 	import {
 		ChevronDownIcon,
@@ -21,7 +18,7 @@
 
 <li class="overflow-hidden card bg-surface-50-950/80">
 	<Accordion.Item value={task.id}>
-		<h3 class="relative">
+		<h2 class="relative h4">
 			<Accordion.ItemTrigger class="flex items-center justify-between gap-2 font-bold">
 				<div class="flex items-center gap-2">
 					<span>
@@ -48,22 +45,12 @@
 					</Progress.Track>
 				</Progress>
 			</div>
-		</h3>
+		</h2>
 		<Accordion.ItemContent>
 			{#snippet element(attributes)}
 				{#if !attributes.hidden}
 					<div class="pb-4" {...attributes} transition:slide={{ duration: 200 }}>
-						{#key taskEdit.value || taskDelete.value}
-							<div in:slide={{ duration: 200 }} out:slide={{ duration: 200 }}>
-								{#if taskEdit.value === task.id}
-									<TaskEdit {task} {categories} />
-								{:else if taskDelete.value === task.id}
-									<TaskDelete {task} />
-								{:else}
-									<TaskContent {task} {categories} />
-								{/if}
-							</div>
-						{/key}
+						<TaskContent {task} {categories} />
 					</div>
 				{/if}
 			{/snippet}

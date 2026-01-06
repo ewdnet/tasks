@@ -1,17 +1,19 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
+	import { Dialog, Portal } from '@skeletonlabs/skeleton-svelte';
 	import { invalidateAll } from '$app/navigation';
 	import { pageView, paginatorReset } from '$lib/stores.svelte';
-	import { ListFilterPlusIcon } from '@lucide/svelte';
-	import { Dialog, Portal } from '@skeletonlabs/skeleton-svelte';
+	import { ListFilterPlusIcon, XIcon } from '@lucide/svelte';
+	const iconSize = 16;
 
 	type CategoryItem = { id: string; name: string };
 	let { categories } = $props<{ categories: CategoryItem[] }>();
+	let open = $state(false);
 </script>
 
-<Dialog>
-	<Dialog.Trigger class="btn preset-tonal btn-sm">
-		<ListFilterPlusIcon size={16} />
+<Dialog {open} onOpenChange={(details: { open: boolean }) => (open = details.open)}>
+	<Dialog.Trigger class="btn preset-tonal btn-sm" disabled={categories.length === 0}>
+		<ListFilterPlusIcon size={iconSize} />
 		New Task
 	</Dialog.Trigger>
 	<Portal>
@@ -28,6 +30,7 @@
 							return async ({ result, update }) => {
 								await update();
 								if (result.type === 'success') {
+									open = false;
 									await invalidateAll();
 									pageView.value = 'tasks';
 									paginatorReset.value = 1;
@@ -36,33 +39,34 @@
 							};
 						}}
 					>
-						<label for="categoryId" class="label">
-							<span class="label-text">Category</span>
-							<select class="select" name="categoryId">
-								<option value="" disabled selected>Select a category</option>
-								{#each categories as category (category.id)}
-									<option value={category.id}>{category.name}</option>
-								{/each}
-							</select>
-						</label>
-						<label for="title" class="label">
-							<span class="label-text">Title</span>
-							<input class="input" name="title" />
-						</label>
-						<label for="content" class="label">
-							<span class="label-text">Content</span>
-							<textarea class="textarea" name="content"></textarea>
-						</label>
+						<fieldset>
+							<label for="categoryId" class="label">
+								<span class="label-text">Category</span>
+								<select id="categoryId" class="select" name="categoryId" required>
+									<option value="" disabled selected>Select a category</option>
+									{#each categories as category (category.id)}
+										<option value={category.id}>{category.name}</option>
+									{/each}
+								</select>
+							</label>
+							<label for="title" class="label">
+								<span class="label-text">Title</span>
+								<input id="title" class="input" name="title" />
+							</label>
+							<label for="content" class="label">
+								<span class="label-text">Content</span>
+								<textarea id="content" class="textarea" name="content"></textarea>
+							</label>
+						</fieldset>
 						<div class="flex items-center justify-center gap-8">
-							<button
-								onclick={(event) => (event.preventDefault(), (pageView.value = 'tasks'))}
-								class="btn preset-filled-surface-500 btn-sm">Cancel</button
-							>
+							<Dialog.CloseTrigger class="btn preset-tonal btn-sm">
+								<XIcon size={iconSize} />
+								Cancel
+							</Dialog.CloseTrigger>
 							<button type="submit" class="btn preset-filled-primary-500 btn-sm">Add Task</button>
 						</div>
 					</form>
 				</Dialog.Description>
-				<Dialog.CloseTrigger class="btn preset-tonal">Close</Dialog.CloseTrigger>
 			</Dialog.Content>
 		</Dialog.Positioner>
 	</Portal>

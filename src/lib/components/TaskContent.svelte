@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { CategoryItem, TaskItem } from '$lib/types';
-	import { categorySelected, taskDelete, taskEdit } from '$lib/stores.svelte';
-	import { PencilIcon, TrashIcon } from '@lucide/svelte';
-	const iconSize = 16;
+	import { categorySelected } from '$lib/stores.svelte';
+	import TaskDelete from './TaskDelete.svelte';
+	import TaskEdit from './TaskEdit.svelte';
 
 	let { categories, task } = $props<{ categories: CategoryItem[]; task: TaskItem }>();
 </script>
@@ -12,7 +12,7 @@
 	{#if task.categoryId === categorySelected.value}
 		<small>{categories.find((c: CategoryItem) => c.id === task.categoryId)?.name}</small>
 	{:else}
-		<button onclick={() => (categorySelected.value = task.categoryId)} class="btn btn-sm"
+		<button onclick={() => (categorySelected.value = task.categoryId)} class="anchor text-xs"
 			>{categories.find((c: CategoryItem) => c.id === task.categoryId)?.name}</button
 		>
 	{/if}
@@ -26,19 +26,7 @@
 		{/if}
 	</p>
 	<div class="mt-2 flex items-center justify-between gap-4 border-t border-t-primary-200-800 pt-4">
-		<button
-			onclick={() => (taskDelete.value = task.id)}
-			class="btn preset-outlined-error-200-800 btn-sm text-error-500"
-		>
-			<TrashIcon size={iconSize} />
-			Delete
-		</button>
-		<button
-			onclick={() => (taskEdit.value = task.id)}
-			class="btn preset-outlined-primary-200-800 btn-sm"
-		>
-			<PencilIcon size={iconSize} />
-			Edit
-		</button>
+		<TaskDelete {task} />
+		<TaskEdit {task} {categories} />
 	</div>
 </footer>

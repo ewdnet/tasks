@@ -28,6 +28,7 @@
 			<input
 				bind:value={searchValue}
 				class="ig-input max-w-xs text-xs"
+				name="q"
 				type="search"
 				placeholder="Search ..."
 			/>

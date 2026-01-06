@@ -1,5 +1,14 @@
 import { maxLength, minLength, number, object, optional, pipe, string } from 'valibot';
 
+export const idSchema = object({
+	id: string()
+});
+
+export const categorySchema = object({
+	id: string(),
+	name: string()
+});
+
 export const categoryCreate = object({
 	name: pipe(
 		string(),
@@ -8,8 +17,12 @@ export const categoryCreate = object({
 	)
 });
 
-export const categoryDelete = object({
-	id: string()
+export const taskSchema = object({
+	id: string(),
+	title: string(),
+	content: optional(string()),
+	progress: optional(number()),
+	categoryId: string()
 });
 
 export const taskCreate = object({
@@ -28,8 +41,4 @@ export const taskUpdate = object({
 	progress: optional(number()),
 	content: optional(string()),
 	categoryId: optional(string())
-});
-
-export const taskDelete = object({
-	id: string()
 });

@@ -1,7 +1,10 @@
 import type { PageServerLoad } from './$types';
+import { idSchema } from '$lib/valibot/index';
+import { valibot } from 'sveltekit-superforms/adapters';
 import { db } from '$lib/server/db';
 import { category, task } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
+import { fail, superValidate } from 'sveltekit-superforms';
 
 export const load = (async () => {
 	const getCategories = async () => {
@@ -13,7 +16,8 @@ export const load = (async () => {
 						progress: true
 					}
 				}
-			}
+			},
+			orderBy: (category, { asc }) => [asc(category.name)]
 		});
 		return categories;
 	};
@@ -45,13 +49,21 @@ export const actions = {
 	},
 	categorydelete: async (event) => {
 		const formData = await event.request.formData();
-		const id = formData.get('id') as string;
 
-		if (id) {
+		const form = await superValidate(formData, valibot(idSchema));
+		const { id } = form.data;
+
+		if (!form.valid) return fail(400, { form });
+
+		try {
 			await db.delete(category).where(eq(category.id, id));
+		} catch (error) {
+			return fail(500, {
+				form,
+				message: 'An error has occurred while deleting the category.',
+				error: String(error)
+			});
 		}
-
-		return { success: true };
 	},
 	task: async (event) => {
 		const formData = await event.request.formData();
@@ -91,12 +103,20 @@ export const actions = {
 	},
 	taskdelete: async (event) => {
 		const formData = await event.request.formData();
-		const id = formData.get('id') as string;
 
-		if (id) {
+		const form = await superValidate(formData, valibot(idSchema));
+		const { id } = form.data;
+
+		if (!form.valid) return fail(400, { form });
+
+		try {
 			await db.delete(task).where(eq(task.id, id));
+		} catch (error) {
+			return fail(500, {
+				form,
+				message: 'An error has occurred while deleting the task.',
+				error: String(error)
+			});
 		}
-
-		return { success: true };
 	}
 };

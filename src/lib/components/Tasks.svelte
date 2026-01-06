@@ -4,7 +4,13 @@
 
 <script lang="ts">
 	import type { CategoryItem, TaskItem } from '$lib/types';
-	import { categorySelected, paginatorReset, searchTerm, taskStatus } from '$lib/stores.svelte';
+	import {
+		categorySelected,
+		pageView,
+		paginatorReset,
+		searchTerm,
+		taskStatus
+	} from '$lib/stores.svelte';
 	import Task from '$lib/components/Task.svelte';
 	import { Accordion, Pagination } from '@skeletonlabs/skeleton-svelte';
 	import { fade } from 'svelte/transition';
@@ -77,4 +83,11 @@
 	</div>
 {:else}
 	<p class="text-center">No Tasks found.</p>
+	{#if !categories.length}
+		<p class="text-center">
+			First please create a <button onclick={() => (pageView.value = 'categories')} class="anchor"
+				>category</button
+			> to add tasks to.
+		</p>
+	{/if}
 {/if}
