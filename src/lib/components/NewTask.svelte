@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { CategoryItem } from '$lib/types';
 	import { applyAction, enhance } from '$app/forms';
 	import { Dialog, Portal } from '@skeletonlabs/skeleton-svelte';
 	import { invalidateAll } from '$app/navigation';
@@ -6,7 +7,6 @@
 	import { ListFilterPlusIcon, XIcon } from '@lucide/svelte';
 	const iconSize = 16;
 
-	type CategoryItem = { id: string; name: string };
 	let { categories } = $props<{ categories: CategoryItem[] }>();
 	let open = $state(false);
 </script>

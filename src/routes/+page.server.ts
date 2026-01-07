@@ -1,9 +1,10 @@
 import type { PageServerLoad } from './$types';
-import { idSchema } from '$lib/valibot/index';
+import { categoryCreate, idSchema, taskCreate, taskSchema } from '$lib/valibot/index';
 import { valibot } from 'sveltekit-superforms/adapters';
+import { setFlash } from 'sveltekit-flash-message/server';
 import { db } from '$lib/server/db';
 import { category, task } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { and, eq, not } from 'drizzle-orm';
 import { fail, superValidate } from 'sveltekit-superforms';
 
 export const load = (async () => {
@@ -38,18 +39,39 @@ export const load = (async () => {
 export const actions = {
 	category: async (event) => {
 		const formData = await event.request.formData();
-		const id = crypto.randomUUID() as string;
-		const name = formData.get('name') as string;
+		const form = await superValidate(formData, valibot(categoryCreate));
 
-		if (name) {
-			await db.insert(category).values({ id, name });
+		if (!form.valid) {
+			setFlash({ type: 'error', message: form.errors.name }, event.cookies);
+			return fail(400, { form });
 		}
 
-		return { success: true };
+		const existingName = await db.query.category.findFirst({
+			where: eq(category.name, form.data.name)
+		});
+
+		if (existingName) {
+			setFlash({ type: 'error', message: 'Category name already exists.' }, event.cookies);
+			return fail(400, { form });
+		}
+
+		const { name } = form.data;
+		const id = crypto.randomUUID() as string;
+
+		try {
+			await db.insert(category).values({ id, name });
+		} catch (error) {
+			return fail(500, {
+				form,
+				message: 'An error has occurred while creating the category.',
+				error: String(error)
+			});
+		}
+
+		setFlash({ type: 'success', message: 'Category created successfully.' }, event.cookies);
 	},
 	categorydelete: async (event) => {
 		const formData = await event.request.formData();
-
 		const form = await superValidate(formData, valibot(idSchema));
 		const { id } = form.data;
 
@@ -64,47 +86,87 @@ export const actions = {
 				error: String(error)
 			});
 		}
+
+		setFlash({ type: 'success', message: 'Category deleted successfully.' }, event.cookies);
 	},
 	task: async (event) => {
 		const formData = await event.request.formData();
-		const id = crypto.randomUUID() as string;
-		const title = formData.get('title') as string;
-		const content = formData.get('content') as string;
-		const categoryId = formData.get('categoryId') as string;
-		const createdAt = new Date();
+		const form = await superValidate(formData, valibot(taskCreate));
 
-		if (title && categoryId) {
+		if (!form.valid) {
+			const errors = Object.values(form.errors).join(' ');
+			setFlash({ type: 'error', message: errors }, event.cookies);
+			return fail(400, { form });
+		}
+
+		const existingTitle = await db.query.task.findFirst({
+			where: eq(task.title, form.data.title)
+		});
+
+		if (existingTitle) {
+			setFlash({ type: 'error', message: 'Task title already exists.' }, event.cookies);
+			return fail(400, { form });
+		}
+
+		const id = crypto.randomUUID() as string;
+		const createdAt = new Date();
+		const { title, content, categoryId } = form.data;
+
+		try {
 			await db
 				.insert(task)
 				.values({ id, title, content, categoryId, createdAt, updatedAt: createdAt });
+		} catch (error) {
+			return fail(500, {
+				form,
+				message: 'An error has occurred while creating the task.',
+				error: String(error)
+			});
 		}
 
-		return { success: true };
+		setFlash({ type: 'success', message: 'Task created successfully.' }, event.cookies);
 	},
 	taskedit: async (event) => {
 		const formData = await event.request.formData();
-		const id = formData.get('id') as string;
-		const categoryId = formData.get('categoryId') as string;
-		const title = formData.get('title') as string;
-		const content = formData.get('content') as string;
-		const progressValue = formData.get('progress');
-		const progress =
-			typeof progressValue === 'string' && progressValue.trim() !== '' ? Number(progressValue) : 0;
-		const updatedAt = new Date();
+		const form = await superValidate(formData, valibot(taskSchema));
 
-		if (id && title) {
-			await db
-				.update(task)
-				.set({ title, categoryId, content, progress, updatedAt })
-				.where(eq(task.id, id));
+		if (!form.valid) {
+			const errors = Object.values(form.errors).join(' ');
+			setFlash({ type: 'error', message: errors }, event.cookies);
+			return fail(400, { form });
 		}
 
-		return { success: true };
+		const existingTitle = await db.query.task.findFirst({
+			where: and(eq(task.title, form.data.title), not(eq(task.id, form.data.id)))
+		});
+
+		if (existingTitle) {
+			setFlash({ type: 'error', message: 'Task title already exists.' }, event.cookies);
+			return fail(400, { form });
+		}
+
+		const { id, title, content, progress, categoryId } = form.data;
+		const updatedAt = new Date();
+
+		try {
+			await db
+				.update(task)
+				.set({ title, content, progress, categoryId, updatedAt })
+				.where(eq(task.id, id));
+		} catch (error) {
+			return fail(500, {
+				form,
+				message: 'An error has occurred while updating the task.',
+				error: String(error)
+			});
+		}
+
+		setFlash({ type: 'success', message: 'Task updated successfully.' }, event.cookies);
 	},
 	taskdelete: async (event) => {
 		const formData = await event.request.formData();
-
 		const form = await superValidate(formData, valibot(idSchema));
+
 		const { id } = form.data;
 
 		if (!form.valid) return fail(400, { form });
@@ -118,5 +180,7 @@ export const actions = {
 				error: String(error)
 			});
 		}
+
+		setFlash({ type: 'success', message: 'Task deleted successfully.' }, event.cookies);
 	}
 };

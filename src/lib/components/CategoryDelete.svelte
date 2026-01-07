@@ -20,9 +20,11 @@
 		<Dialog.Backdrop class="fixed inset-0 z-50 bg-surface-50-950/50" />
 		<Dialog.Positioner class="fixed inset-0 z-50 flex items-center justify-center">
 			<Dialog.Content class="w-md space-y-2 card bg-surface-100-900 p-4 shadow-xl">
-				<Dialog.Title class="text-2xl font-bold text-center">Realy delete the Category?</Dialog.Title>
+				<Dialog.Title class="text-center text-2xl font-bold"
+					>Realy delete the Category?</Dialog.Title
+				>
 				<Dialog.Description>
-          <p class="pb-8 text-center">All associated files will also be deleted.</p>
+					<p class="pb-8 text-center">All associated files will also be deleted.</p>
 					<form
 						method="post"
 						action="?/categorydelete"

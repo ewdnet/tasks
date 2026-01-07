@@ -18,7 +18,7 @@
 		<Dialog.Backdrop class="fixed inset-0 z-50 bg-surface-50-950/50" />
 		<Dialog.Positioner class="fixed inset-0 z-50 flex items-center justify-center">
 			<Dialog.Content class="w-md space-y-2 card bg-surface-100-900 p-4 shadow-xl">
-				<Dialog.Title class="text-2xl font-bold">Add New Category</Dialog.Title>
+				<Dialog.Title class="text-center text-2xl font-bold">Add New Category</Dialog.Title>
 				<Dialog.Description>
 					<form
 						class="space-y-4"
@@ -37,8 +37,9 @@
 							};
 						}}
 					>
-						<fieldset>
+						<fieldset class="py-4">
 							<label for="name" class="label">
+								<span class="label-text">Category Nme</span>
 								<input id="name" class="input" name="name" required />
 							</label>
 						</fieldset>

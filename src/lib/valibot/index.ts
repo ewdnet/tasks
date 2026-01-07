@@ -19,7 +19,11 @@ export const categoryCreate = object({
 
 export const taskSchema = object({
 	id: string(),
-	title: string(),
+	title: pipe(
+		string(),
+		minLength(2, 'Title must be at least 2 characters long'),
+		maxLength(20, 'Title must be at most 20 characters long')
+	),
 	content: optional(string()),
 	progress: optional(number()),
 	categoryId: string()

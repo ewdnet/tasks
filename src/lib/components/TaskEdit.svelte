@@ -97,8 +97,13 @@
 							<label class="label" for="categoryId">
 								<span class="label-text">Category</span>
 								<select id="categoryId" name="categoryId" class="select" bind:value={categoryId}>
+									<option value={task.categoryId}
+										>{categories.find((c: CategoryItem) => c.id === task.categoryId)?.name}</option
+									>
 									{#each categories as category (category.id)}
-										<option value={category.id}>{category.name}</option>
+										{#if category.id !== task.categoryId}
+											<option value={category.id}>{category.name}</option>
+										{/if}
 									{/each}
 								</select>
 							</label>
