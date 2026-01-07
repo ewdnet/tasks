@@ -3,8 +3,8 @@
 	import type { CategoryItem, TaskItem } from '$lib/types';
 	import Tasks from '$lib/components/Tasks.svelte';
 	import Categories from '$lib/components/Categories.svelte';
-	import NewTask from '$lib/components/NewTask.svelte';
-	import NewCategory from '$lib/components/NewCategory.svelte';
+	import TaskCreate from '$lib/components/TaskCreate.svelte';
+	import CategoryCreate from '$lib/components/CategoryCreate.svelte';
 	import TasksPageTitle from '$lib/components/TasksPageTitle.svelte';
 	import CategoriesPageTitle from '$lib/components/CategoriesPageTitle.svelte';
 	import TaskStatus from '$lib/components/TaskStatus.svelte';
@@ -120,13 +120,13 @@
 		{#if pageView.value === 'tasks'}
 			<h1 class="pb-4 h4"><TasksPageTitle {categories} /></h1>
 			<div class="flex flex-row-reverse items-center justify-between gap-4">
-				<NewTask {categories} />
+				<TaskCreate {categories} />
 				<TaskStatus {tasks} />
 			</div>
 		{:else if pageView.value === 'categories'}
 			<h1 class="pb-4 h4"><CategoriesPageTitle /></h1>
 			<div class="flex flex-row-reverse items-center justify-between gap-4">
-				<NewCategory />
+				<CategoryCreate />
 				<CategoryStatus {categories} />
 			</div>
 		{/if}

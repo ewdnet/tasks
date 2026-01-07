@@ -14,7 +14,7 @@
 <Dialog {open} onOpenChange={(details: { open: boolean }) => (open = details.open)}>
 	<Dialog.Trigger class="btn preset-outlined-error-200-800 btn-sm text-error-500">
 		<TrashIcon size={iconSize} />
-		Delete Category
+		Delete
 	</Dialog.Trigger>
 	<Portal>
 		<Dialog.Backdrop class="fixed inset-0 z-50 bg-surface-50-950/50" />
@@ -24,7 +24,7 @@
 					>Realy delete the Category?</Dialog.Title
 				>
 				<Dialog.Description>
-					<p class="pb-8 text-center">All associated files will also be deleted.</p>
+					<p class="pb-8 text-center">All tasks in the category are also deleted.</p>
 					<form
 						method="post"
 						action="?/categorydelete"

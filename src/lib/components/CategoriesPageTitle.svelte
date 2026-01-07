@@ -9,7 +9,7 @@
 </span>
 <span>
 	{#if categoryStatus.value === 'emptycategories'}
-		New (empty) Categories
+		Empty (no Tasks) Categories
 	{:else if categoryStatus.value === 'inprogresscategories'}
 		Categories in Progress
 	{:else if categoryStatus.value === 'completedcategories'}

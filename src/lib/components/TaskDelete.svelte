@@ -14,13 +14,13 @@
 <Dialog {open} onOpenChange={(details: { open: boolean }) => (open = details.open)}>
 	<Dialog.Trigger class="btn preset-outlined-error-200-800 btn-sm">
 		<TrashIcon size={iconSize} />
-		Delete Task
+		Delete
 	</Dialog.Trigger>
 	<Portal>
 		<Dialog.Backdrop class="fixed inset-0 z-50 bg-surface-50-950/50" />
 		<Dialog.Positioner class="fixed inset-0 z-50 flex items-center justify-center">
 			<Dialog.Content class="w-md space-y-2 card bg-surface-100-900 p-4 shadow-xl">
-				<Dialog.Title class="text-2xl font-bold">Really delete the task?</Dialog.Title>
+				<Dialog.Title class="text-center text-2xl font-bold">Really delete the task?</Dialog.Title>
 				<Dialog.Description>
 					<form
 						class="space-y-4"

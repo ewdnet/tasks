@@ -2,7 +2,7 @@
 	import type { CategoryItem, TaskItem } from '$lib/types';
 	import { categorySelected } from '$lib/stores.svelte';
 	import TaskDelete from './TaskDelete.svelte';
-	import TaskEdit from './TaskEdit.svelte';
+	import TaskUpdate from './TaskUpdate.svelte';
 
 	let { categories, task } = $props<{ categories: CategoryItem[]; task: TaskItem }>();
 </script>
@@ -27,6 +27,6 @@
 	</p>
 	<div class="mt-2 flex items-center justify-between gap-4 border-t border-t-primary-200-800 pt-4">
 		<TaskDelete {task} />
-		<TaskEdit {task} {categories} />
+		<TaskUpdate {task} {categories} />
 	</div>
 </footer>

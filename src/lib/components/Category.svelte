@@ -58,19 +58,19 @@
 			{#snippet element(attributes)}
 				{#if !attributes.hidden}
 					<div class="pb-4" {...attributes} transition:slide={{ duration: 200 }}>
-						<div class="pb-4">
+						<p class="pb-8 text-center">
 							{#if category.tasks?.length}
 								<button
 									onclick={() => (
 										(categorySelected.value = category.id),
 										(pageView.value = 'tasks')
 									)}
-									class="btn btn-sm">Show all Tasks in the Category {category.name}</button
+									class="anchor text-xs">Show all Tasks in the Category {category.name}</button
 								>
 							{:else}
 								<small>No Tasks in this Category.</small>
 							{/if}
-						</div>
+						</p>
 						<div class="flex justify-center">
 							<CategoryDelete {category} />
 						</div>

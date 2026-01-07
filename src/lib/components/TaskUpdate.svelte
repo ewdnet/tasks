@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { CategoryItem, TaskItem } from '$lib/types';
-	import { Dialog, Portal } from '@skeletonlabs/skeleton-svelte';
+	import { Dialog, Portal, Slider } from '@skeletonlabs/skeleton-svelte';
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { pageView, paginatorReset } from '$lib/stores.svelte';
@@ -22,12 +22,18 @@
 		categoryId = task.categoryId;
 	});
 	let open = $state(false);
+	const bgColorClass = (progress: number) => {
+		if (progress > 0 && progress <= 25) return 'bg-error-500/50';
+		if (progress > 25 && progress <= 75) return 'bg-warning-500/50';
+		if (progress > 75 && progress <= 100) return 'bg-success-500/50';
+		return '';
+	};
 </script>
 
 <Dialog {open} onOpenChange={(details: { open: boolean }) => (open = details.open)}>
 	<Dialog.Trigger class="btn preset-tonal btn-sm" disabled={categories.length === 0}>
 		<PencilIcon size={iconSize} />
-		Edit Task
+		Edit
 	</Dialog.Trigger>
 	<Portal>
 		<Dialog.Backdrop class="fixed inset-0 z-50 bg-surface-50-950/50" />
@@ -65,22 +71,30 @@
 									required
 								/>
 							</label>
-							<label class="label flex-auto" for="progress">
-								<span class="label-text">Progress {progress}%</span>
-								<input
-									type="range"
-									id="progress"
-									name="progress"
-									min="0"
-									max="100"
-									step="1"
-									value={progress}
-									oninput={(event) => {
-										progress = (event.currentTarget as HTMLInputElement).valueAsNumber;
-									}}
-									class="range w-full"
-								/>
-							</label>
+							<Slider
+								onValueChange={(details: { value: number[] }) => (progress = details.value[0])}
+								min={0}
+								max={100}
+								step={25}
+								value={[progress]}
+								class="my-4"
+							>
+								<Slider.Label><span class="text-label">Progress {progress}%</span></Slider.Label>
+								<Slider.Control>
+									<Slider.Track>
+										<Slider.Range class={bgColorClass(progress)} />
+									</Slider.Track>
+									<Slider.Thumb index={0}>
+										<Slider.HiddenInput name="progress" value={[progress]} />
+									</Slider.Thumb>
+								</Slider.Control>
+								<Slider.MarkerGroup>
+									<Slider.Marker value={25} />
+									<Slider.Marker value={50} />
+									<Slider.Marker value={75} />
+								</Slider.MarkerGroup>
+								<Slider.ValueText />
+							</Slider>
 							<label class="label" for="content">
 								<span class="label-text">Content</span>
 								<textarea
