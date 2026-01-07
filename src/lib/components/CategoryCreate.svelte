@@ -23,7 +23,7 @@
 					<form
 						class="space-y-4"
 						method="post"
-						action="?/category"
+						action="?/category_create"
 						use:enhance={() => {
 							return async ({ result, update }) => {
 								await update();

@@ -37,7 +37,7 @@ export const load = (async () => {
 }) satisfies PageServerLoad;
 
 export const actions = {
-	category: async (event) => {
+	category_create: async (event) => {
 		const formData = await event.request.formData();
 		const form = await superValidate(formData, valibot(categoryCreate));
 
@@ -70,7 +70,7 @@ export const actions = {
 
 		setFlash({ type: 'success', message: 'Category created successfully.' }, event.cookies);
 	},
-	categorydelete: async (event) => {
+	category_delete: async (event) => {
 		const formData = await event.request.formData();
 		const form = await superValidate(formData, valibot(idSchema));
 		const { id } = form.data;
@@ -89,7 +89,7 @@ export const actions = {
 
 		setFlash({ type: 'success', message: 'Category deleted successfully.' }, event.cookies);
 	},
-	task: async (event) => {
+	task_create: async (event) => {
 		const formData = await event.request.formData();
 		const form = await superValidate(formData, valibot(taskCreate));
 
@@ -126,7 +126,7 @@ export const actions = {
 
 		setFlash({ type: 'success', message: 'Task created successfully.' }, event.cookies);
 	},
-	taskedit: async (event) => {
+	task_update: async (event) => {
 		const formData = await event.request.formData();
 		const form = await superValidate(formData, valibot(taskSchema));
 
@@ -163,7 +163,7 @@ export const actions = {
 
 		setFlash({ type: 'success', message: 'Task updated successfully.' }, event.cookies);
 	},
-	taskdelete: async (event) => {
+	task_delete: async (event) => {
 		const formData = await event.request.formData();
 		const form = await superValidate(formData, valibot(idSchema));
 

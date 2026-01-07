@@ -25,7 +25,7 @@
 					<form
 						class="space-y-4 card preset-filled-surface-300-700 p-4"
 						method="post"
-						action="?/task"
+						action="?/task_create"
 						use:enhance={() => {
 							return async ({ result, update }) => {
 								await update();

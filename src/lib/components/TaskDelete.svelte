@@ -25,7 +25,7 @@
 					<form
 						class="space-y-4"
 						method="post"
-						action="?/taskdelete"
+						action="?/task_delete"
 						use:enhance={() => {
 							return async ({ result, update }) => {
 								await update();

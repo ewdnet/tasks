@@ -27,7 +27,7 @@
 					<p class="pb-8 text-center">All tasks in the category are also deleted.</p>
 					<form
 						method="post"
-						action="?/categorydelete"
+						action="?/category_delete"
 						use:enhance={() => {
 							return async ({ result, update }) => {
 								await update();
