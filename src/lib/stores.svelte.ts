@@ -1,5 +1,19 @@
 // REFS
 
+// refBoolean
+// function refBoolean(initial: boolean) {
+// 	let value = $state(initial);
+
+// 	return {
+// 		get value() {
+// 			return value;
+// 		},
+// 		set value(v) {
+// 			value = v;
+// 		}
+// 	};
+// }
+
 // refNumber
 function refNumber(initial: number | null) {
 	let value = $state(initial);
@@ -50,9 +64,3 @@ export const taskStatus = refString('');
 
 // Paginator Reset (scips to page 1 when filters change)
 export const paginatorReset = refNumber(1);
-
-// task being edited
-export const taskEdit = refString('');
-
-// task being deleted
-export const taskDelete = refString('');
