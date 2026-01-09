@@ -1,3 +1,5 @@
+import type { TooltipTriggerProps } from '@skeletonlabs/skeleton-svelte';
+
 export type CategoryItem = {
 	id: string;
 	name: string;
@@ -15,3 +17,9 @@ export type TaskItem = {
 	createdAt: Date;
 	updatedAt: Date;
 };
+
+export type TooltipTriggerAttrs = TooltipTriggerProps extends {
+	element?: import('svelte').Snippet<infer A extends unknown[]>;
+}
+	? A[0]
+	: never;

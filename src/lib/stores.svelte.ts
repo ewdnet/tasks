@@ -47,9 +47,6 @@ function refString(initial: string) {
 // tasks overall progress
 export const progressOverall = refNumber(null);
 
-// pageView
-export const pageView = refString('tasks');
-
 // searchTerm
 export const searchTerm = refString('');
 
@@ -64,3 +61,6 @@ export const taskStatus = refString('');
 
 // Paginator Reset (scips to page 1 when filters change)
 export const paginatorReset = refNumber(1);
+
+// Tabs (Skeleten UI) - active tab onValueChange
+export const activeTab = refString('tasks');

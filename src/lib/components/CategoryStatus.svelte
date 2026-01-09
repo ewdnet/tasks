@@ -2,13 +2,13 @@
 	import { categoryStatus } from '$lib/stores.svelte';
 	import type { CategoryItem } from '$lib/types';
 	import { Portal, Tooltip } from '@skeletonlabs/skeleton-svelte';
-	import { pageView, searchTerm } from '$lib/stores.svelte';
+	import { activeTab, searchTerm } from '$lib/stores.svelte';
 
 	let { categories } = $props<{ categories: CategoryItem[] }>();
 
 	function baseCategoriesForCounts() {
 		let result = categories;
-		if (pageView.value === 'categories' && searchTerm.value.length > 0) {
+		if (activeTab.value === 'categories' && searchTerm.value.length > 0) {
 			const q = searchTerm.value.toLowerCase();
 			result = result.filter((category: CategoryItem) => category.name.toLowerCase().includes(q));
 		}

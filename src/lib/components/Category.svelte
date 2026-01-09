@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { TaskItem } from '$lib/types';
-	import { categorySelected, pageView } from '$lib/stores.svelte';
+	import { categorySelected, activeTab } from '$lib/stores.svelte';
 	import { Accordion, Progress } from '@skeletonlabs/skeleton-svelte';
 	import { slide } from 'svelte/transition';
 	import {
@@ -17,12 +17,37 @@
 	const categoryProgress = (): number => {
 		const total = category.tasks?.length ?? 0;
 		if (total === 0) return 0;
-
 		const sum = category.tasks?.reduce((acc: number, e: TaskItem) => acc + e.progress, 0) ?? 0;
-
 		return Math.round(sum / total);
 	};
 </script>
+
+{#snippet complCat()}
+	<span class="flex items-center gap-2 text-xs text-success-500/50">
+		<CircleCheckBigIcon size={iconSize} class="text-success-500/50" />
+		<span class="btn-icon btn btn-icon-sm rounded-full border border-success-500 bg-success-500/15"
+			>{category.tasks.length}</span
+		>
+	</span>
+{/snippet}
+
+{#snippet progrCat()}
+	<span class="flex items-center gap-2 text-xs text-warning-500/50">
+		<CircleDashedIcon size={iconSize} class="text-warning-500/50" />
+		<span class="btn-icon btn btn-icon-sm rounded-full border border-warning-500 bg-warning-500/15"
+			>{category.tasks.length}</span
+		>
+	</span>
+{/snippet}
+
+{#snippet emptyCat()}
+	<span class="flex items-center gap-2 text-xs text-error-500/50">
+		<CircleOffIcon size={iconSize} class="text-error-500/50" />
+		<span class="btn-icon btn btn-icon-sm rounded-full border border-error-500 bg-error-500/15"
+			>{category.tasks.length}</span
+		>
+	</span>
+{/snippet}
 
 <li class="overflow-hidden card preset-filled-surface-50-950">
 	<Accordion.Item value={category.id}>
@@ -31,11 +56,11 @@
 				<div class="flex items-center gap-2">
 					<span>
 						{#if categoryProgress() === 100}
-							<CircleCheckBigIcon size={iconSize} class="text-success-500/50" />
+							{@render complCat()}
 						{:else if categoryProgress() > 0 && categoryProgress() < 100}
-							<CircleDashedIcon size={iconSize} class="text-warning-500/50" />
+							{@render progrCat()}
 						{:else}
-							<CircleOffIcon size={iconSize} class="text-error-500/50" />
+							{@render emptyCat()}
 						{/if}
 					</span>
 					<span>{category.name}</span>
@@ -63,7 +88,7 @@
 								<button
 									onclick={() => (
 										(categorySelected.value = category.id),
-										(pageView.value = 'tasks')
+										(activeTab.value = 'tasks')
 									)}
 									class="anchor text-xs">Show all Tasks in the Category {category.name}</button
 								>

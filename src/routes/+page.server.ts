@@ -1,10 +1,16 @@
 import type { PageServerLoad } from './$types';
-import { categoryCreate, idSchema, taskCreate, taskSchema } from '$lib/valibot/index';
+import {
+	categoryCreate,
+	idMultipleSchema,
+	idSchema,
+	taskCreate,
+	taskSchema
+} from '$lib/valibot/index';
 import { valibot } from 'sveltekit-superforms/adapters';
 import { setFlash } from 'sveltekit-flash-message/server';
 import { db } from '$lib/server/db';
 import { category, task } from '$lib/server/db/schema';
-import { and, eq, not } from 'drizzle-orm';
+import { and, eq, inArray, not } from 'drizzle-orm';
 import { fail, superValidate } from 'sveltekit-superforms';
 
 export const load = (async () => {
@@ -88,6 +94,40 @@ export const actions = {
 		}
 
 		setFlash({ type: 'success', message: 'Category deleted successfully.' }, event.cookies);
+	},
+	category_delete_multiple: async (event) => {
+		const formData = await event.request.formData();
+		const form = await superValidate(formData, valibot(idMultipleSchema));
+
+		if (!form.valid) {
+			const msg = Array.isArray(form.errors.id) ? form.errors.id.join(' ') : form.errors.id;
+			setFlash({ type: 'error', message: msg ?? 'No categories selected.' }, event.cookies);
+			return fail(400, { form });
+		}
+
+		const ids = form.data.id
+			.split(',')
+			.map((id) => id.trim())
+			.filter(Boolean);
+		if (ids.length === 0) {
+			setFlash({ type: 'error', message: 'No categories selected.' }, event.cookies);
+			return fail(400, { form });
+		}
+
+		try {
+			await db.delete(category).where(inArray(category.id, ids));
+		} catch (error) {
+			return fail(500, {
+				form,
+				message: 'An error has occurred while deleting the categories.',
+				error: String(error)
+			});
+		}
+
+		setFlash(
+			{ type: 'success', message: 'Categories and Tasks deleted successfully.' },
+			event.cookies
+		);
 	},
 	task_create: async (event) => {
 		const formData = await event.request.formData();

@@ -4,6 +4,10 @@ export const idSchema = object({
 	id: string()
 });
 
+export const idMultipleSchema = object({
+	id: pipe(string(), minLength(2, 'At least one ID is required'))
+});
+
 export const categorySchema = object({
 	id: string(),
 	name: string()
@@ -36,7 +40,7 @@ export const taskCreate = object({
 		maxLength(20, 'Title must be at most 20 characters long')
 	),
 	content: optional(string()),
-	categoryId: string()
+	categoryId: pipe(string(), minLength(1, 'Category is required'))
 });
 
 export const taskUpdate = object({

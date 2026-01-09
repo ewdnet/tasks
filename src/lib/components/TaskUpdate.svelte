@@ -3,7 +3,7 @@
 	import { Dialog, Portal, Slider } from '@skeletonlabs/skeleton-svelte';
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import { pageView, paginatorReset } from '$lib/stores.svelte';
+	import { activeTab, paginatorReset } from '$lib/stores.svelte';
 	import { CheckIcon, PencilIcon, XIcon } from '@lucide/svelte';
 	const iconSize = 16;
 
@@ -51,7 +51,7 @@
 								if (result.type === 'success') {
 									open = false;
 									await invalidateAll();
-									pageView.value = 'tasks';
+									activeTab.value = 'tasks';
 									paginatorReset.value = 1;
 								}
 								await applyAction(result);

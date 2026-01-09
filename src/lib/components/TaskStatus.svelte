@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { TaskItem } from '$lib/types';
-	import { categorySelected, pageView, searchTerm, taskStatus } from '$lib/stores.svelte';
+	import { categorySelected, activeTab, searchTerm, taskStatus } from '$lib/stores.svelte';
 	import { Portal, Tooltip } from '@skeletonlabs/skeleton-svelte';
 
 	let { tasks } = $props<{ tasks: TaskItem[] }>();
@@ -12,7 +12,7 @@
 			result = result.filter((task: TaskItem) => task.categoryId === categorySelected.value);
 		}
 
-		if (pageView.value === 'tasks' && searchTerm.value.length > 0) {
+		if (activeTab.value === 'tasks' && searchTerm.value.length > 0) {
 			const q = searchTerm.value.toLowerCase();
 			result = result.filter(
 				(task: TaskItem) =>

@@ -9,16 +9,16 @@
 	import CategoriesPageTitle from '$lib/components/CategoriesPageTitle.svelte';
 	import TaskStatus from '$lib/components/TaskStatus.svelte';
 	import CategoryStatus from '$lib/components/CategoryStatus.svelte';
-	import { scale } from 'svelte/transition';
 	import {
 		categoryStatus,
 		categorySelected,
 		taskStatus,
-		pageView,
 		progressOverall,
 		paginatorReset,
-		searchTerm
+		searchTerm,
+		activeTab
 	} from '$lib/stores.svelte';
+	import { Tabs } from '@skeletonlabs/skeleton-svelte';
 
 	const { data } = $props() as PageProps;
 	let categories = $state<CategoryItem[]>([]);
@@ -49,7 +49,7 @@
 	// Filtering
 	$effect(() => {
 		// Reset pagination when filters change
-		void pageView.value;
+		void activeTab.value;
 		void searchTerm.value;
 		void taskStatus.value;
 		void categoryStatus.value;
@@ -61,7 +61,7 @@
 	$effect(() => {
 		let result = categories;
 
-		if (pageView.value === 'categories' && searchTerm.value.length > 0) {
+		if (activeTab.value === 'categories' && searchTerm.value.length > 0) {
 			const q = searchTerm.value.toLowerCase();
 			result = result.filter((category: CategoryItem) => category.name.toLowerCase().includes(q));
 		}
@@ -95,7 +95,7 @@
 			result = result.filter((task: TaskItem) => task.categoryId === categorySelected.value);
 		}
 
-		if (pageView.value === 'tasks' && searchTerm.value.length > 0) {
+		if (activeTab.value === 'tasks' && searchTerm.value.length > 0) {
 			const q = searchTerm.value.toLowerCase();
 			result = result.filter(
 				(task: TaskItem) =>
@@ -115,27 +115,25 @@
 	});
 </script>
 
-{#key pageView.value}
-	<header in:scale={{ duration: 200 }}>
-		{#if pageView.value === 'tasks'}
+<Tabs defaultValue="tasks" value={activeTab.value}>
+	<Tabs.Content value="tasks">
+		<header>
 			<h1 class="pb-4 h4"><TasksPageTitle {categories} /></h1>
-			<div class="flex flex-row-reverse items-center justify-between gap-4">
-				<TaskCreate {categories} />
+			<div class="flex flex-row-reverse items-center justify-between gap-4 pb-4">
+				<div><TaskCreate {categories} /></div>
 				<TaskStatus {tasks} />
 			</div>
-		{:else if pageView.value === 'categories'}
+		</header>
+		<Tasks {categories} tasks={filteredTasks} />
+	</Tabs.Content>
+	<Tabs.Content value="categories">
+		<header>
 			<h1 class="pb-4 h4"><CategoriesPageTitle /></h1>
-			<div class="flex flex-row-reverse items-center justify-between gap-4">
+			<div class="flex flex-row-reverse items-center justify-between gap-4 pb-4">
 				<CategoryCreate />
 				<CategoryStatus {categories} />
 			</div>
-		{/if}
-	</header>
-	<div in:scale={{ duration: 200 }}>
-		{#if pageView.value === 'tasks'}
-			<Tasks {categories} tasks={filteredTasks} />
-		{:else if pageView.value === 'categories'}
-			<Categories categories={filteredCategories} />
-		{/if}
-	</div>
-{/key}
+		</header>
+		<Categories categories={filteredCategories} />
+	</Tabs.Content>
+</Tabs>

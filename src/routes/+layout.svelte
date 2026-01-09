@@ -4,14 +4,15 @@
 	import { page } from '$app/state';
 	import Footer from '$lib/site/Footer.svelte';
 	import Header from '$lib/site/Header.svelte';
-	import { pageView } from '$lib/stores.svelte';
+	import { activeTab } from '$lib/stores.svelte';
 	import { Toast } from '@skeletonlabs/skeleton-svelte';
 	import { toaster } from '$lib/toaster';
 	import { getFlash } from 'sveltekit-flash-message';
+	import { scale } from 'svelte/transition';
 
 	let { children } = $props();
 
-	const pageTitle = $derived(pageView.value.charAt(0).toUpperCase() + pageView.value.slice(1));
+	const pageTitle = $derived(activeTab.value.charAt(0).toUpperCase() + activeTab.value.slice(1));
 
 	const outer = 'px-2';
 	const inner = 'w-full max-w-xl mx-auto  py-4 space-y-4';
@@ -61,9 +62,11 @@
 	</div>
 </header>
 <main class="flex-auto {outer}">
-	<article class={inner}>
-		{@render children()}
-	</article>
+	{#key activeTab.value}
+		<article class={inner} in:scale>
+			{@render children()}
+		</article>
+	{/key}
 </main>
 <footer class={outer}>
 	<div class="{inner} {border_t}">

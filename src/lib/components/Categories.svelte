@@ -6,6 +6,7 @@
 	import type { CategoryItem } from '$lib/types';
 	import { Accordion, Pagination } from '@skeletonlabs/skeleton-svelte';
 	import Category from '$lib/components/Category.svelte';
+	import CategoriesDeleting from '$lib/components/CategoriesDeleting.svelte';
 	import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/svelte';
 	import { fade } from 'svelte/transition';
 	import { categoryStatus, paginatorReset, searchTerm } from '$lib/stores.svelte';
@@ -14,7 +15,6 @@
 
 	// Pagination
 	const page = $derived(paginatorReset.value ?? 1);
-
 	const start = $derived((page - 1) * PAGE_SIZE);
 	const end = $derived(start + PAGE_SIZE);
 	const paginatedCategories = $derived(categories.slice(start, end));
@@ -30,8 +30,8 @@
 			</ul>
 		{/key}
 	</Accordion>
-	<div class="flex justify-between">
-		<div>
+	<footer class="flex justify-between gap-8">
+		<div class="flex items-center gap-2">
 			<small>
 				{#if categoryStatus.value !== '' || searchTerm.value !== ''}
 					Filtered Categories:
@@ -40,6 +40,9 @@
 				{/if}
 				{categories.length}
 			</small>
+			{#if categories.length > 1}
+				<CategoriesDeleting {categories} />
+			{/if}
 		</div>
 		{#if categories.length > PAGE_SIZE}
 			<Pagination
@@ -72,7 +75,7 @@
 				</Pagination.NextTrigger>
 			</Pagination>
 		{/if}
-	</div>
+	</footer>
 {:else}
 	<p class="py-4 text-center">No Categories found.</p>
 {/if}

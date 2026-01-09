@@ -1,14 +1,15 @@
 <script lang="ts">
 	import ProgressOverall from '$lib/components/ProgressOverall.svelte';
 	import {
+		activeTab,
 		categorySelected,
 		categoryStatus,
-		pageView,
 		paginatorReset,
 		searchTerm,
 		taskStatus
 	} from '$lib/stores.svelte';
 	import { ListChecksIcon, SearchIcon, TagsIcon, XIcon } from '@lucide/svelte';
+	import { Tabs } from '@skeletonlabs/skeleton-svelte';
 	const iconSize = 16;
 
 	let searchValue = $state('');
@@ -20,10 +21,6 @@
 <ProgressOverall />
 <div class="flex-auto">
 	<div class="flex justify-end pb-4">
-		<!-- <div class="input-group w-fit grid-cols-[auto_1fr_auto]">
-			<div class="ig-cell"><SearchIcon size={iconSize} /></div>
-			<input bind:value={searchValue} class="ig-input max-w-xs text-xs" type="search" placeholder="Search ..." />
-		</div> -->
 		<div class="input-group w-fit grid-cols-[1fr_auto]">
 			<input
 				bind:value={searchValue}
@@ -48,34 +45,36 @@
 		</div>
 	</div>
 	<nav class="flex flex-row-reverse gap-2 border-t border-t-primary-200-800 pt-4">
-		<button
-			onclick={() => (
-				(searchTerm.value = ''),
-				(searchValue = ''),
-				(taskStatus.value = ''),
-				(categorySelected.value = ''),
-				(paginatorReset.value = 1),
-				(pageView.value = 'tasks')
-			)}
-			class="btn preset-filled-surface-200-800 btn-sm"
-			aria-current={pageView.value === 'tasks'}
+		<Tabs
+			defaultValue="tasks"
+			onValueChange={(event: { value: string }) => {
+				activeTab.value = event.value;
+			}}
 		>
-			<ListChecksIcon size={iconSize} />
-			Tasks
-		</button>
-		<button
-			onclick={() => (
-				(searchTerm.value = ''),
-				(searchValue = ''),
-				(categoryStatus.value = ''),
-				(paginatorReset.value = 1),
-				(pageView.value = 'categories')
-			)}
-			class="btn preset-filled-surface-200-800 btn-sm"
-			aria-current={pageView.value === 'categories'}
-		>
-			<TagsIcon size={iconSize} />
-			Categories
-		</button>
+			<Tabs.List class="flex w-full flex-row-reverse">
+				<Tabs.Trigger
+					onclick={() => (
+						(searchTerm.value = ''),
+						(searchValue = ''),
+						(taskStatus.value = ''),
+						(categorySelected.value = ''),
+						(paginatorReset.value = 1),
+						(activeTab.value = 'tasks')
+					)}
+					value="tasks">Tasks</Tabs.Trigger
+				>
+				<Tabs.Trigger
+					onclick={() => (
+						(searchTerm.value = ''),
+						(searchValue = ''),
+						(categoryStatus.value = ''),
+						(paginatorReset.value = 1),
+						(activeTab.value = 'categories')
+					)}
+					value="categories">Categories</Tabs.Trigger
+				>
+				<Tabs.Indicator />
+			</Tabs.List>
+		</Tabs>
 	</nav>
 </div>

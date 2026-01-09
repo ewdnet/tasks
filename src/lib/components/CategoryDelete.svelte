@@ -2,7 +2,7 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { Dialog, Portal } from '@skeletonlabs/skeleton-svelte';
 	import { invalidateAll } from '$app/navigation';
-	import { pageView, paginatorReset } from '$lib/stores.svelte';
+	import { activeTab, paginatorReset } from '$lib/stores.svelte';
 	import { TrashIcon, XIcon } from '@lucide/svelte';
 
 	let { category } = $props<{ category: { id: string; name: string } }>();
@@ -34,7 +34,7 @@
 								if (result.type === 'success') {
 									open = false;
 									await invalidateAll();
-									pageView.value = 'categories';
+									activeTab.value = 'categories';
 									paginatorReset.value = 1;
 								}
 								await applyAction(result);

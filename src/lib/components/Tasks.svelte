@@ -6,7 +6,7 @@
 	import type { CategoryItem, TaskItem } from '$lib/types';
 	import {
 		categorySelected,
-		pageView,
+		activeTab,
 		paginatorReset,
 		searchTerm,
 		taskStatus
@@ -38,7 +38,7 @@
 			</ul>
 		{/key}
 	</Accordion>
-	<div class="flex justify-between">
+	<footer class="flex justify-between gap-8">
 		<div>
 			<small>
 				{#if taskStatus.value !== '' || categorySelected.value !== '' || searchTerm.value !== ''}
@@ -80,12 +80,12 @@
 				</Pagination.NextTrigger>
 			</Pagination>
 		{/if}
-	</div>
+	</footer>
 {:else}
 	<p class="text-center">No Tasks found.</p>
 	{#if !categories.length}
 		<p class="text-center">
-			First please create a <button onclick={() => (pageView.value = 'categories')} class="anchor"
+			First please create a <button onclick={() => (activeTab.value = 'categories')} class="anchor"
 				>category</button
 			> to add tasks to.
 		</p>

@@ -3,7 +3,7 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { Dialog, Portal } from '@skeletonlabs/skeleton-svelte';
 	import { invalidateAll } from '$app/navigation';
-	import { pageView, paginatorReset } from '$lib/stores.svelte';
+	import { activeTab, paginatorReset } from '$lib/stores.svelte';
 	import { ListFilterPlusIcon, XIcon } from '@lucide/svelte';
 	const iconSize = 16;
 
@@ -32,7 +32,7 @@
 								if (result.type === 'success') {
 									open = false;
 									await invalidateAll();
-									pageView.value = 'tasks';
+									activeTab.value = 'tasks';
 									paginatorReset.value = 1;
 								}
 								await applyAction(result);
@@ -42,7 +42,7 @@
 						<fieldset>
 							<label for="categoryId" class="label">
 								<span class="label-text">Category</span>
-								<select id="categoryId" class="select" name="categoryId" required>
+								<select id="categoryId" class="select" name="categoryId">
 									<option value="" disabled selected>Select a category</option>
 									{#each categories as category (category.id)}
 										<option value={category.id}>{category.name}</option>
