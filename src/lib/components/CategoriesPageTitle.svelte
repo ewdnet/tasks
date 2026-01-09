@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { categoryStatus, searchTerm } from '$lib/stores.svelte';
+	import { TagsIcon } from '@lucide/svelte';
 </script>
 
+<TagsIcon size={24} class="mr-1 mb-1 inline" />
 <span>
 	{#if searchTerm.value !== ''}
 		Search "{searchTerm.value}" in

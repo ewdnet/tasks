@@ -50,6 +50,7 @@
 			onValueChange={(event: { value: string }) => {
 				activeTab.value = event.value;
 			}}
+			value={activeTab.value}
 		>
 			<Tabs.List class="flex w-full flex-row-reverse">
 				<Tabs.Trigger
@@ -61,8 +62,12 @@
 						(paginatorReset.value = 1),
 						(activeTab.value = 'tasks')
 					)}
-					value="tasks">Tasks</Tabs.Trigger
+					value="tasks"
+					class="preset-tonal"
 				>
+					<ListChecksIcon size={iconSize} />
+					Tasks
+				</Tabs.Trigger>
 				<Tabs.Trigger
 					onclick={() => (
 						(searchTerm.value = ''),
@@ -71,8 +76,12 @@
 						(paginatorReset.value = 1),
 						(activeTab.value = 'categories')
 					)}
-					value="categories">Categories</Tabs.Trigger
+					value="categories"
+					class="preset-tonal"
 				>
+					<TagsIcon size={iconSize} />
+					Categories
+				</Tabs.Trigger>
 				<Tabs.Indicator />
 			</Tabs.List>
 		</Tabs>

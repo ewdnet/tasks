@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { CategoryItem } from '$lib/types';
 	import { categorySelected, searchTerm, taskStatus } from '$lib/stores.svelte';
-	import { RefreshCcwIcon } from '@lucide/svelte';
+	import { ListChecksIcon, RefreshCcwIcon } from '@lucide/svelte';
 	import { Portal, Tooltip } from '@skeletonlabs/skeleton-svelte';
 
 	let { categories } = $props<{ categories: CategoryItem[] }>();
@@ -14,6 +14,7 @@
 	});
 </script>
 
+<ListChecksIcon size={24} />
 <span>
 	{#if searchTerm.value !== ''}
 		Search "{searchTerm.value}" in
