@@ -222,5 +222,36 @@ export const actions = {
 		}
 
 		setFlash({ type: 'success', message: 'Task deleted successfully.' }, event.cookies);
+	},
+	task_delete_multiple: async (event) => {
+		const formData = await event.request.formData();
+		const form = await superValidate(formData, valibot(idMultipleSchema));
+
+		if (!form.valid) {
+			const msg = Array.isArray(form.errors.id) ? form.errors.id.join(' ') : form.errors.id;
+			setFlash({ type: 'error', message: msg ?? 'No tasks selected.' }, event.cookies);
+			return fail(400, { form });
+		}
+
+		const ids = form.data.id
+			.split(',')
+			.map((id) => id.trim())
+			.filter(Boolean);
+		if (ids.length === 0) {
+			setFlash({ type: 'error', message: 'No tasks selected.' }, event.cookies);
+			return fail(400, { form });
+		}
+
+		try {
+			await db.delete(task).where(inArray(task.id, ids));
+		} catch (error) {
+			return fail(500, {
+				form,
+				message: 'An error has occurred while deleting the tasks.',
+				error: String(error)
+			});
+		}
+
+		setFlash({ type: 'success', message: 'Tasks deleted successfully.' }, event.cookies);
 	}
 };

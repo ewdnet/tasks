@@ -30,7 +30,7 @@
 			</ul>
 		{/key}
 	</Accordion>
-	<footer class="flex justify-between gap-8">
+	<footer class="flex flex-wrap justify-between gap-8">
 		<div class="flex items-center gap-2">
 			<small>
 				{#if categoryStatus.value !== '' || searchTerm.value !== ''}

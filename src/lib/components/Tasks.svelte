@@ -11,6 +11,7 @@
 		searchTerm,
 		taskStatus
 	} from '$lib/stores.svelte';
+	import TasksDeleting from '$lib/components/TasksDeleting.svelte';
 	import Task from '$lib/components/Task.svelte';
 	import { Accordion, Pagination } from '@skeletonlabs/skeleton-svelte';
 	import { fade } from 'svelte/transition';
@@ -38,8 +39,8 @@
 			</ul>
 		{/key}
 	</Accordion>
-	<footer class="flex justify-between gap-8">
-		<div>
+	<footer class="flex flex-wrap justify-between gap-8">
+		<div class="flex items-center gap-2">
 			<small>
 				{#if taskStatus.value !== '' || categorySelected.value !== '' || searchTerm.value !== ''}
 					Filtered Tasks:
@@ -48,6 +49,9 @@
 				{/if}
 				{tasks.length}
 			</small>
+			{#if tasks.length > 1}
+				<TasksDeleting {tasks} />
+			{/if}
 		</div>
 		{#if tasks.length > PAGE_SIZE}
 			<Pagination

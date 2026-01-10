@@ -1,22 +1,22 @@
 <script lang="ts">
-	import type { CategoryItem, TooltipTriggerAttrs } from '$lib/types';
+	import type { TaskItem, TooltipTriggerAttrs } from '$lib/types';
 	import { applyAction, enhance } from '$app/forms';
 	import { Dialog, Portal, Tooltip } from '@skeletonlabs/skeleton-svelte';
 	import { invalidateAll } from '$app/navigation';
 	import {
-		categorySelected,
-		categoryStatus,
 		activeTab,
+		categorySelected,
 		paginatorReset,
-		searchTerm
+		searchTerm,
+		taskStatus
 	} from '$lib/stores.svelte';
 	import { animation } from '$lib/animationCss';
 	import { TrashIcon, XIcon } from '@lucide/svelte';
 	const iconSize = 16;
 
-	let { categories } = $props<{ categories: CategoryItem[] }>();
+	let { tasks } = $props<{ tasks: TaskItem[] }>();
 
-	let categoryItems: string[] = $derived(categories.map((category: CategoryItem) => category.id));
+	let taskItems: string[] = $derived(tasks.map((task: TaskItem) => task.id));
 
 	let open = $state(false);
 </script>
@@ -37,9 +37,9 @@
 			<Tooltip.Positioner>
 				<Tooltip.Content class="card preset-filled-error-800-200 p-2">
 					<span
-						>Delete {searchTerm.value || categoryStatus.value || categorySelected.value
+						>Delete {searchTerm.value || taskStatus.value || categorySelected.value
 							? 'Filtered '
-							: 'All'} categories.</span
+							: 'All'} tasks.</span
 					>
 					<Tooltip.Arrow
 						class="[--arrow-background:var(--color-error-800-200)] [--arrow-size:--spacing(2)]"
@@ -56,19 +56,18 @@
 		<Dialog.Positioner class="fixed inset-0 z-50 flex items-center justify-center">
 			<Dialog.Content class="w-md space-y-2 card bg-surface-100-900 p-4 shadow-xl {animation}">
 				<Dialog.Title class="text-center text-2xl font-bold"
-					>Realy delete the {searchTerm.value || categoryStatus.value || categorySelected.value
+					>Realy delete the {searchTerm.value || taskStatus.value || categorySelected.value
 						? 'filtered '
-						: 'all'} Categories?</Dialog.Title
+						: 'all'} Tasks?</Dialog.Title
 				>
 				<Dialog.Description>
 					<p class="pb-8 text-center">
-						All tasks {searchTerm.value || categoryStatus.value || categorySelected.value
-							? 'in the filtered categories'
-							: ''} are also deleted.
+						All {searchTerm.value || taskStatus.value || categorySelected.value ? 'filtered' : ''} tasks
+						are deleted.
 					</p>
 					<form
 						method="post"
-						action="?/category_delete_multiple"
+						action="?/task_delete_multiple"
 						use:enhance={() => {
 							return async ({ result, update }) => {
 								await update();
@@ -76,15 +75,16 @@
 									open = false;
 									await invalidateAll();
 									searchTerm.value = '';
-									categoryStatus.value = '';
-									activeTab.value = 'categories';
+									taskStatus.value = '';
+									categorySelected.value = '';
+									activeTab.value = 'tasks';
 									paginatorReset.value = 1;
 								}
 								await applyAction(result);
 							};
 						}}
 					>
-						<input type="hidden" name="id" bind:value={categoryItems} />
+						<input type="hidden" name="id" bind:value={taskItems} />
 						<div class="flex items-center justify-center gap-8">
 							<Dialog.CloseTrigger class="btn preset-tonal btn-sm">
 								<XIcon size={iconSize} />

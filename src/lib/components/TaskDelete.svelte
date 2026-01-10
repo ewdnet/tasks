@@ -4,6 +4,7 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { activeTab, paginatorReset } from '$lib/stores.svelte';
+	import { animation } from '$lib/animationCss';
 	import { TrashIcon, XIcon } from '@lucide/svelte';
 	const iconSize = 16;
 
@@ -19,7 +20,7 @@
 	<Portal>
 		<Dialog.Backdrop class="fixed inset-0 z-50 bg-surface-50-950/50" />
 		<Dialog.Positioner class="fixed inset-0 z-50 flex items-center justify-center">
-			<Dialog.Content class="w-md space-y-2 card bg-surface-100-900 p-4 shadow-xl">
+			<Dialog.Content class="w-md space-y-2 card bg-surface-100-900 p-4 shadow-xl {animation}">
 				<Dialog.Title class="text-center text-2xl font-bold">Really delete the task?</Dialog.Title>
 				<Dialog.Description>
 					<form

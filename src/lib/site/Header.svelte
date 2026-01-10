@@ -51,8 +51,9 @@
 				activeTab.value = event.value;
 			}}
 			value={activeTab.value}
+			class="flex flex-row-reverse"
 		>
-			<Tabs.List class="flex w-full flex-row-reverse">
+			<Tabs.List>
 				<Tabs.Trigger
 					onclick={() => (
 						(searchTerm.value = ''),
@@ -63,7 +64,7 @@
 						(activeTab.value = 'tasks')
 					)}
 					value="tasks"
-					class="preset-tonal"
+					class="preset-tonal text-xs sm:text-sm"
 				>
 					<ListChecksIcon size={iconSize} />
 					Tasks
@@ -77,7 +78,7 @@
 						(activeTab.value = 'categories')
 					)}
 					value="categories"
-					class="preset-tonal"
+					class="preset-tonal text-xs sm:text-sm"
 				>
 					<TagsIcon size={iconSize} />
 					Categories
