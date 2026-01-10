@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { categoryStatus } from '$lib/stores.svelte';
+	import { accordionCollapsed, categoryStatus } from '$lib/stores.svelte';
 	import type { CategoryItem } from '$lib/types';
 	import { Portal, Tooltip } from '@skeletonlabs/skeleton-svelte';
 	import { activeTab, searchTerm } from '$lib/stores.svelte';
@@ -44,9 +44,11 @@
 			<Tooltip positioning={{ placement: 'top' }}>
 				<Tooltip.Trigger
 					type="button"
-					onclick={() =>
+					onclick={() => (
 						(categoryStatus.value =
-							categoryStatus.value === 'emptycategories' ? '' : 'emptycategories')}
+							categoryStatus.value === 'emptycategories' ? '' : 'emptycategories'),
+						(accordionCollapsed.value += 1)
+					)}
 					disabled={emptyCategories() === 0}
 					class="btn-icon btn btn-icon-sm rounded-full border border-error-500 bg-error-500/15"
 				>
@@ -74,9 +76,11 @@
 			<Tooltip positioning={{ placement: 'top' }}>
 				<Tooltip.Trigger
 					type="button"
-					onclick={() =>
+					onclick={() => (
 						(categoryStatus.value =
-							categoryStatus.value === 'inprogresscategories' ? '' : 'inprogresscategories')}
+							categoryStatus.value === 'inprogresscategories' ? '' : 'inprogresscategories'),
+						(accordionCollapsed.value += 1)
+					)}
 					disabled={inprogressCategories() === 0}
 					class="btn-icon btn btn-icon-sm rounded-full border border-warning-500 bg-warning-500/15"
 				>
@@ -104,9 +108,11 @@
 			<Tooltip positioning={{ placement: 'top' }}>
 				<Tooltip.Trigger
 					type="button"
-					onclick={() =>
+					onclick={() => (
 						(categoryStatus.value =
-							categoryStatus.value === 'completedcategories' ? '' : 'completedcategories')}
+							categoryStatus.value === 'completedcategories' ? '' : 'completedcategories'),
+						(accordionCollapsed.value += 1)
+					)}
 					disabled={completedCategories() === 0}
 					class="btn-icon btn btn-icon-sm rounded-full border border-success-500 bg-success-500/15"
 				>

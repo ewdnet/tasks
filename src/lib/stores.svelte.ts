@@ -1,28 +1,14 @@
 // REFS
 
-// refBoolean
-// function refBoolean(initial: boolean) {
-// 	let value = $state(initial);
-
-// 	return {
-// 		get value() {
-// 			return value;
-// 		},
-// 		set value(v) {
-// 			value = v;
-// 		}
-// 	};
-// }
-
 // refNumber
-function refNumber(initial: number | null) {
-	let value = $state(initial);
+function refNumber<T extends number | null>(initial: T) {
+	let value: T = $state(initial);
 
 	return {
 		get value() {
 			return value;
 		},
-		set value(v) {
+		set value(v: T) {
 			value = v;
 		}
 	};
@@ -45,7 +31,7 @@ function refString(initial: string) {
 // STORES
 
 // tasks overall progress
-export const progressOverall = refNumber(null);
+export const progressOverall = refNumber<number | null>(null);
 
 // searchTerm
 export const searchTerm = refString('');
@@ -60,7 +46,10 @@ export const categorySelected = refString('');
 export const taskStatus = refString('');
 
 // Paginator Reset (scips to page 1 when filters change)
-export const paginatorReset = refNumber(1);
+export const paginatorReset = refNumber<number>(1);
+
+// Accordion (Skeleton UI) - collapse trigger counter
+export const accordionCollapsed = refNumber<number>(0);
 
 // Tabs (Skeleten UI) - active tab onValueChange
 export const activeTab = refString('tasks');

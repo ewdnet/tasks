@@ -1,6 +1,7 @@
 <script lang="ts">
 	import ProgressOverall from '$lib/components/ProgressOverall.svelte';
 	import {
+		accordionCollapsed,
 		activeTab,
 		categorySelected,
 		categoryStatus,
@@ -12,9 +13,13 @@
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
 	const iconSize = 16;
 
-	let searchValue = $state('');
+	let searchHasContent = $state(false);
 	$effect(() => {
-		searchTerm.value = searchValue.toLowerCase();
+		const hasContent = searchTerm.value.length > 0;
+		if (hasContent && !searchHasContent) {
+			accordionCollapsed.value += 1;
+		}
+		searchHasContent = hasContent;
 	});
 </script>
 
@@ -23,21 +28,23 @@
 	<div class="flex justify-end pb-4">
 		<div class="input-group w-fit grid-cols-[1fr_auto]">
 			<input
-				bind:value={searchValue}
+				value={searchTerm.value}
 				class="ig-input max-w-xs text-xs"
 				name="q"
 				type="search"
 				placeholder="Search ..."
+				oninput={(event) =>
+					(searchTerm.value = (event.currentTarget as HTMLInputElement).value.toLowerCase())}
 			/>
 			<div class="ig-btn preset-tonal">
-				{#if !searchValue.length}
+				{#if !searchTerm.value.length}
 					<SearchIcon size={iconSize} />
 				{:else}
 					<XIcon
 						size={iconSize}
 						onclick={() => {
-							searchValue = '';
 							searchTerm.value = '';
+							accordionCollapsed.value += 1;
 						}}
 					/>
 				{/if}
@@ -57,7 +64,6 @@
 				<Tabs.Trigger
 					onclick={() => (
 						(searchTerm.value = ''),
-						(searchValue = ''),
 						(taskStatus.value = ''),
 						(categorySelected.value = ''),
 						(paginatorReset.value = 1),
@@ -72,7 +78,6 @@
 				<Tabs.Trigger
 					onclick={() => (
 						(searchTerm.value = ''),
-						(searchValue = ''),
 						(categoryStatus.value = ''),
 						(paginatorReset.value = 1),
 						(activeTab.value = 'categories')

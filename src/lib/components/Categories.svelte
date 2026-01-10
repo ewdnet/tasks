@@ -9,7 +9,12 @@
 	import CategoriesDeleting from '$lib/components/CategoriesDeleting.svelte';
 	import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/svelte';
 	import { fade } from 'svelte/transition';
-	import { categoryStatus, paginatorReset, searchTerm } from '$lib/stores.svelte';
+	import {
+		accordionCollapsed,
+		categoryStatus,
+		paginatorReset,
+		searchTerm
+	} from '$lib/stores.svelte';
 
 	let { categories } = $props<{ categories: CategoryItem[] }>();
 
@@ -21,16 +26,18 @@
 </script>
 
 {#if categories.length}
-	<Accordion collapsible>
-		{#key categoryStatus.value || paginatorReset.value}
-			<ul class="space-y-2 pb-4" in:fade>
-				{#each paginatedCategories as category (category.id)}
-					<Category {category} />
-				{/each}
-			</ul>
-		{/key}
-	</Accordion>
-	<footer class="flex flex-wrap justify-between gap-8">
+	{#key accordionCollapsed.value}
+		<Accordion collapsible>
+			{#key categoryStatus.value || paginatorReset.value}
+				<ul class="space-y-2 pb-4" in:fade>
+					{#each paginatedCategories as category (category.id)}
+						<Category {category} />
+					{/each}
+				</ul>
+			{/key}
+		</Accordion>
+	{/key}
+	<footer class="flex justify-between gap-8">
 		<div class="flex items-center gap-2">
 			<small>
 				{#if categoryStatus.value !== '' || searchTerm.value !== ''}

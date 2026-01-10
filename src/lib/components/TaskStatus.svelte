@@ -1,6 +1,12 @@
 <script lang="ts">
 	import type { TaskItem } from '$lib/types';
-	import { categorySelected, activeTab, searchTerm, taskStatus } from '$lib/stores.svelte';
+	import {
+		categorySelected,
+		activeTab,
+		searchTerm,
+		taskStatus,
+		accordionCollapsed
+	} from '$lib/stores.svelte';
 	import { Portal, Tooltip } from '@skeletonlabs/skeleton-svelte';
 
 	let { tasks } = $props<{ tasks: TaskItem[] }>();
@@ -44,7 +50,10 @@
 			<Tooltip positioning={{ placement: 'top' }}>
 				<Tooltip.Trigger
 					type="button"
-					onclick={() => (taskStatus.value = taskStatus.value === 'new' ? '' : 'new')}
+					onclick={() => (
+						(taskStatus.value = taskStatus.value === 'new' ? '' : 'new'),
+						(accordionCollapsed.value += 1)
+					)}
 					disabled={newTasks() === 0}
 					class="btn-icon btn btn-icon-sm rounded-full border border-error-500 bg-error-500/15"
 				>
@@ -68,7 +77,10 @@
 			<Tooltip positioning={{ placement: 'top' }}>
 				<Tooltip.Trigger
 					type="button"
-					onclick={() => (taskStatus.value = taskStatus.value === 'current' ? '' : 'current')}
+					onclick={() => (
+						(taskStatus.value = taskStatus.value === 'current' ? '' : 'current'),
+						(accordionCollapsed.value += 1)
+					)}
 					disabled={inprogressTasks() === 0}
 					class="btn-icon btn btn-icon-sm rounded-full border border-warning-500 bg-warning-500/15"
 				>
@@ -96,7 +108,10 @@
 			<Tooltip positioning={{ placement: 'top' }}>
 				<Tooltip.Trigger
 					type="button"
-					onclick={() => (taskStatus.value = taskStatus.value === 'completed' ? '' : 'completed')}
+					onclick={() => (
+						(taskStatus.value = taskStatus.value === 'completed' ? '' : 'completed'),
+						(accordionCollapsed.value += 1)
+					)}
 					disabled={completedTasks() === 0}
 					class="btn-icon btn btn-icon-sm rounded-full border border-success-500 bg-success-500/15"
 				>

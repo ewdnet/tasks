@@ -5,6 +5,7 @@
 <script lang="ts">
 	import type { CategoryItem, TaskItem } from '$lib/types';
 	import {
+		accordionCollapsed,
 		categorySelected,
 		activeTab,
 		paginatorReset,
@@ -30,15 +31,17 @@
 </script>
 
 {#if tasks.length}
-	<Accordion collapsible>
-		{#key taskStatus.value || categorySelected.value || paginatorReset.value}
-			<ul class="space-y-2 pb-4" in:fade>
-				{#each paginatedTasks as task (task.id)}
-					<Task {task} {categories} />
-				{/each}
-			</ul>
-		{/key}
-	</Accordion>
+	{#key accordionCollapsed.value}
+		<Accordion collapsible>
+			{#key taskStatus.value || categorySelected.value || paginatorReset.value}
+				<ul class="space-y-2 pb-4" in:fade>
+					{#each paginatedTasks as task (task.id)}
+						<Task {task} {categories} />
+					{/each}
+				</ul>
+			{/key}
+		</Accordion>
+	{/key}
 	<footer class="flex flex-wrap justify-between gap-8">
 		<div class="flex items-center gap-2">
 			<small>
