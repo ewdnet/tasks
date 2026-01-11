@@ -6,36 +6,41 @@
 
 	let { categories } = $props<{ categories: CategoryItem[] }>();
 
-	function baseCategoriesForCounts() {
+	const baseCategoriesForCounts = () => {
 		let result = categories;
 		if (activeTab.value === 'categories' && searchTerm.value.length > 0) {
 			const q = searchTerm.value.toLowerCase();
 			result = result.filter((category: CategoryItem) => category.name.toLowerCase().includes(q));
 		}
 		return result;
-	}
+	};
 
 	// Empty Categories
-	function emptyCategories() {
+	const emptyCategories = () => {
 		return baseCategoriesForCounts().filter((category: CategoryItem) => category.tasks.length === 0)
 			.length;
-	}
+	};
+	// New Categories
+	const newCategories = () => {
+		return baseCategoriesForCounts().filter((category: CategoryItem) => {
+			return category.tasks.length > 0 && category.tasks.every((task) => task.progress === 0);
+		}).length;
+	};
 	// Categories in Progress
-	function inprogressCategories() {
+	const inprogressCategories = () => {
 		return baseCategoriesForCounts().filter((category: CategoryItem) => {
-			const total = category.tasks.length;
-			const completed = category.tasks.filter((task) => task.progress === 100).length;
-			return total > 0 && completed < total;
+			return (
+				category.tasks.length > 0 &&
+				category.tasks.some((task) => task.progress > 0 && task.progress < 100)
+			);
 		}).length;
-	}
+	};
 	// Completed Categories
-	function completedCategories() {
+	const completedCategories = () => {
 		return baseCategoriesForCounts().filter((category: CategoryItem) => {
-			const total = category.tasks.length;
-			const completed = category.tasks.filter((task) => task.progress === 100).length;
-			return total > 0 && total === completed;
+			return category.tasks.length > 0 && category.tasks.every((task) => task.progress === 100);
 		}).length;
-	}
+	};
 </script>
 
 {#if categories.length}
@@ -50,9 +55,41 @@
 						(accordionCollapsed.value += 1)
 					)}
 					disabled={emptyCategories() === 0}
-					class="btn-icon btn btn-icon-sm rounded-full border border-error-500 bg-error-500/15"
+					class="btn-icon btn btn-icon-sm rounded-full border border-primary-500 bg-primary-500/15"
 				>
 					{emptyCategories()}
+				</Tooltip.Trigger>
+				<Portal>
+					<Tooltip.Positioner>
+						<Tooltip.Content class="card preset-filled-primary-800-200 p-2">
+							<span
+								>{categoryStatus.value === 'emptycategories'
+									? 'Reset the Filter'
+									: 'Show the empty Categories'}</span
+							>
+							<Tooltip.Arrow
+								class="[--arrow-background:var(--color-primary-800-200)] [--arrow-size:--spacing(2)]"
+							>
+								<Tooltip.ArrowTip />
+							</Tooltip.Arrow>
+						</Tooltip.Content>
+					</Tooltip.Positioner>
+				</Portal>
+			</Tooltip>
+		</li>
+		<li>
+			<Tooltip positioning={{ placement: 'top' }}>
+				<Tooltip.Trigger
+					type="button"
+					onclick={() => (
+						(categoryStatus.value =
+							categoryStatus.value === 'newcategories' ? '' : 'newcategories'),
+						(accordionCollapsed.value += 1)
+					)}
+					disabled={newCategories() === 0}
+					class="btn-icon btn btn-icon-sm rounded-full border border-error-500 bg-error-500/15"
+				>
+					{newCategories()}
 				</Tooltip.Trigger>
 				<Portal>
 					<Tooltip.Positioner>
@@ -60,7 +97,7 @@
 							<span
 								>{categoryStatus.value === 'emptycategories'
 									? 'Reset the Filter'
-									: 'Show the empty Categories'}</span
+									: 'Show the New Categories'}</span
 							>
 							<Tooltip.Arrow
 								class="[--arrow-background:var(--color-error-800-200)] [--arrow-size:--spacing(2)]"

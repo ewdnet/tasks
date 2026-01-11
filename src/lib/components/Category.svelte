@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { TaskItem } from '$lib/types';
-	import { categorySelected, activeTab } from '$lib/stores.svelte';
-	import { Accordion, Progress } from '@skeletonlabs/skeleton-svelte';
+	import { categorySelected, activeTab, accordionCollapsed } from '$lib/stores.svelte';
+	import { Accordion, Portal, Progress, Tooltip } from '@skeletonlabs/skeleton-svelte';
 	import { slide } from 'svelte/transition';
 	import {
 		ChevronDownIcon,
@@ -25,27 +25,103 @@
 {#snippet complCat()}
 	<span class="flex items-center gap-2 text-xs text-success-500/50">
 		<CircleCheckBigIcon size={iconSize} class="text-success-500/50" />
-		<span class="btn-icon btn btn-icon-sm rounded-full border border-success-500 bg-success-500/15"
-			>{category.tasks.length}</span
-		>
+		<Tooltip positioning={{ placement: 'top' }}>
+			<Tooltip.Trigger>
+				<span
+					class="btn-icon btn btn-icon-sm rounded-full border border-success-500 bg-success-500/15"
+					>{category.tasks.length}</span
+				>
+			</Tooltip.Trigger>
+			<Portal>
+				<Tooltip.Positioner>
+					<Tooltip.Content class="card preset-filled-surface-950-50 p-2">
+						<span>Tasks in the Category</span>
+						<Tooltip.Arrow
+							class="[--arrow-background:var(--color-surface-950-50)] [--arrow-size:--spacing(2)]"
+						>
+							<Tooltip.ArrowTip />
+						</Tooltip.Arrow>
+					</Tooltip.Content>
+				</Tooltip.Positioner>
+			</Portal>
+		</Tooltip>
 	</span>
 {/snippet}
 
 {#snippet progrCat()}
 	<span class="flex items-center gap-2 text-xs text-warning-500/50">
 		<CircleDashedIcon size={iconSize} class="text-warning-500/50" />
-		<span class="btn-icon btn btn-icon-sm rounded-full border border-warning-500 bg-warning-500/15"
-			>{category.tasks.length}</span
-		>
+		<Tooltip positioning={{ placement: 'top' }}>
+			<Tooltip.Trigger>
+				<span
+					class="btn-icon btn btn-icon-sm rounded-full border border-warning-500 bg-warning-500/15"
+					>{category.tasks.length}</span
+				>
+			</Tooltip.Trigger>
+			<Portal>
+				<Tooltip.Positioner>
+					<Tooltip.Content class="card preset-filled-surface-950-50 p-2">
+						<span>Tasks in the Category</span>
+						<Tooltip.Arrow
+							class="[--arrow-background:var(--color-surface-950-50)] [--arrow-size:--spacing(2)]"
+						>
+							<Tooltip.ArrowTip />
+						</Tooltip.Arrow>
+					</Tooltip.Content>
+				</Tooltip.Positioner>
+			</Portal>
+		</Tooltip>
+	</span>
+{/snippet}
+
+{#snippet newCat()}
+	<span class="flex items-center gap-2 text-xs text-error-500/50">
+		<CircleOffIcon size={iconSize} class="text-error-500/50" />
+		<Tooltip positioning={{ placement: 'top' }}>
+			<Tooltip.Trigger>
+				<span class="btn-icon btn btn-icon-sm rounded-full border border-error-500 bg-error-500/15"
+					>{category.tasks.length}</span
+				>
+			</Tooltip.Trigger>
+			<Portal>
+				<Tooltip.Positioner>
+					<Tooltip.Content class="card preset-filled-surface-950-50 p-2">
+						<span>Tasks in the Category</span>
+						<Tooltip.Arrow
+							class="[--arrow-background:var(--color-surface-950-50)] [--arrow-size:--spacing(2)]"
+						>
+							<Tooltip.ArrowTip />
+						</Tooltip.Arrow>
+					</Tooltip.Content>
+				</Tooltip.Positioner>
+			</Portal>
+		</Tooltip>
 	</span>
 {/snippet}
 
 {#snippet emptyCat()}
-	<span class="flex items-center gap-2 text-xs text-error-500/50">
-		<CircleOffIcon size={iconSize} class="text-error-500/50" />
-		<span class="btn-icon btn btn-icon-sm rounded-full border border-error-500 bg-error-500/15"
-			>{category.tasks.length}</span
-		>
+	<span class="flex items-center gap-2 text-xs text-primary-500/50">
+		<CircleOffIcon size={iconSize} class="text-primary-500/50" />
+		<Tooltip positioning={{ placement: 'top' }}>
+			<Tooltip.Trigger>
+				<span
+					class="btn-icon btn btn-icon-sm rounded-full border border-primary-500 bg-primary-500/15"
+					>{category.tasks.length}</span
+				>
+			</Tooltip.Trigger>
+			<Portal>
+				<Tooltip.Positioner>
+					<Tooltip.Content class="card preset-filled-surface-950-50 p-2">
+						<span>Tasks in the Category</span>
+						<Tooltip.Arrow
+							class="[--arrow-background:var(--color-surface-950-50)] [--arrow-size:--spacing(2)]"
+						>
+							<Tooltip.ArrowTip />
+						</Tooltip.Arrow>
+					</Tooltip.Content>
+				</Tooltip.Positioner>
+			</Portal>
+		</Tooltip>
 	</span>
 {/snippet}
 
@@ -59,7 +135,9 @@
 							{@render complCat()}
 						{:else if categoryProgress() > 0 && categoryProgress() < 100}
 							{@render progrCat()}
-						{:else}
+						{:else if category.tasks.length > 0 && categoryProgress() === 0}
+							{@render newCat()}
+						{:else if category.tasks.length === 0}
 							{@render emptyCat()}
 						{/if}
 					</span>
@@ -88,7 +166,8 @@
 								<button
 									onclick={() => (
 										(categorySelected.value = category.id),
-										(activeTab.value = 'tasks')
+										(activeTab.value = 'tasks'),
+										(accordionCollapsed.value += 1)
 									)}
 									class="anchor text-xs">Show all Tasks in the Category {category.name}</button
 								>

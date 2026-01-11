@@ -68,12 +68,20 @@
 
 		if (categoryStatus.value === 'emptycategories') {
 			result = result.filter((category: CategoryItem) => category.tasks.length === 0);
+		} else if (categoryStatus.value === 'newcategories') {
+			result = result.filter((category: CategoryItem) => {
+				return (
+					category.tasks.length > 0 &&
+					category.tasks.every((task: CategoryTaskItem) => task.progress === 0)
+				);
+			});
 		} else if (categoryStatus.value === 'inprogresscategories') {
 			result = result.filter(
 				(category: CategoryItem) =>
 					category.tasks.length > 0 &&
-					category.tasks.length >
-						category.tasks.filter((task: CategoryTaskItem) => task.progress === 100).length
+					category.tasks.filter(
+						(task: CategoryTaskItem) => task.progress > 0 && task.progress < 100
+					).length
 			);
 		} else if (categoryStatus.value === 'completedcategories') {
 			result = result.filter(
