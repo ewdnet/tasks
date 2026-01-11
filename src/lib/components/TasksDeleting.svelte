@@ -57,7 +57,7 @@
 			<Dialog.Content class="w-md space-y-2 card bg-surface-100-900 p-4 shadow-xl {animation}">
 				<Dialog.Title class="text-center text-2xl font-bold"
 					>Realy delete the {searchTerm.value || taskStatus.value || categorySelected.value
-						? 'filtered '
+						? `${tasks.length} filtered `
 						: 'all'} Tasks?</Dialog.Title
 				>
 				<Dialog.Description>

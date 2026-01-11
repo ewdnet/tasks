@@ -2,7 +2,7 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { Dialog, Portal } from '@skeletonlabs/skeleton-svelte';
 	import { invalidateAll } from '$app/navigation';
-	import { activeTab, paginatorReset } from '$lib/stores.svelte';
+	import { activeTab, categoryStatus, paginatorReset, searchTerm } from '$lib/stores.svelte';
 	import { animation } from '$lib/animationCss';
 	import { TagIcon, XIcon } from '@lucide/svelte';
 	const iconSize = 16;
@@ -31,6 +31,8 @@
 								if (result.type === 'success') {
 									open = false;
 									await invalidateAll();
+									searchTerm.value = '';
+									categoryStatus.value = '';
 									activeTab.value = 'categories';
 									paginatorReset.value = 1;
 								}

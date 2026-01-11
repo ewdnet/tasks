@@ -65,6 +65,7 @@
 					onclick={() => (
 						(searchTerm.value = ''),
 						(taskStatus.value = ''),
+						(categoryStatus.value = ''),
 						(categorySelected.value = ''),
 						(paginatorReset.value = 1),
 						(activeTab.value = 'tasks')
@@ -78,7 +79,9 @@
 				<Tabs.Trigger
 					onclick={() => (
 						(searchTerm.value = ''),
+						(taskStatus.value = ''),
 						(categoryStatus.value = ''),
+						(categorySelected.value = ''),
 						(paginatorReset.value = 1),
 						(activeTab.value = 'categories')
 					)}

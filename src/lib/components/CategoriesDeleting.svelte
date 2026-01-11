@@ -57,7 +57,7 @@
 			<Dialog.Content class="w-md space-y-2 card bg-surface-100-900 p-4 shadow-xl {animation}">
 				<Dialog.Title class="text-center text-2xl font-bold"
 					>Realy delete the {searchTerm.value || categoryStatus.value || categorySelected.value
-						? 'filtered '
+						? `${categories.length} filtered `
 						: 'all'} Categories?</Dialog.Title
 				>
 				<Dialog.Description>

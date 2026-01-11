@@ -9,8 +9,9 @@
 	let categoryName: string = $state('');
 	$effect(() => {
 		if (categorySelected.value === '') return;
-		categoryName = categories.filter((cat: CategoryItem) => cat.id == categorySelected.value)[0]
-			.name;
+		categoryName = categories.find(
+			(category: CategoryItem) => category.id === categorySelected.value
+		)?.name as string;
 	});
 </script>
 
