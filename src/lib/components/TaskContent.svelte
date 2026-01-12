@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { CategoryItem, TaskItem } from '$lib/types';
 	import { accordionCollapsed, categorySelected } from '$lib/stores.svelte';
-	import TaskDelete from './TaskDelete.svelte';
-	import TaskUpdate from './TaskUpdate.svelte';
+	import TaskDelete from '$lib/components/TaskDelete.svelte';
+	import TaskUpdate from '$lib/components/TaskUpdate.svelte';
 
 	let { categories, task } = $props<{ categories: CategoryItem[]; task: TaskItem }>();
 </script>

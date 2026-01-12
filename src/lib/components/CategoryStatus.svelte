@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { accordionCollapsed, categoryStatus } from '$lib/stores.svelte';
 	import type { CategoryItem } from '$lib/types';
-	import { Portal, Tooltip } from '@skeletonlabs/skeleton-svelte';
+	import { accordionCollapsed, categoryStatus } from '$lib/stores.svelte';
 	import { activeTab, searchTerm } from '$lib/stores.svelte';
+	import { Portal, Tooltip } from '@skeletonlabs/skeleton-svelte';
 
 	let { categories } = $props<{ categories: CategoryItem[] }>();
 
@@ -95,7 +95,7 @@
 					<Tooltip.Positioner>
 						<Tooltip.Content class="card preset-filled-error-800-200 p-2">
 							<span
-								>{categoryStatus.value === 'emptycategories'
+								>{categoryStatus.value === 'newcategories'
 									? 'Reset the Filter'
 									: 'Show the New Categories'}</span
 							>

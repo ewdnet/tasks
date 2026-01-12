@@ -17,6 +17,7 @@
 	import { Accordion, Pagination } from '@skeletonlabs/skeleton-svelte';
 	import { fade } from 'svelte/transition';
 	import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/svelte';
+	const iconSize = 16;
 
 	let { categories, tasks } = $props<{
 		categories: CategoryItem[];
@@ -67,7 +68,7 @@
 				}}
 			>
 				<Pagination.PrevTrigger>
-					<ArrowLeftIcon class="size-4" />
+					<ArrowLeftIcon size={iconSize} />
 				</Pagination.PrevTrigger>
 				<Pagination.Context>
 					{#snippet children(pagination)}
@@ -83,7 +84,7 @@
 					{/snippet}
 				</Pagination.Context>
 				<Pagination.NextTrigger>
-					<ArrowRightIcon class="size-4" />
+					<ArrowRightIcon size={iconSize} />
 				</Pagination.NextTrigger>
 			</Pagination>
 		{/if}

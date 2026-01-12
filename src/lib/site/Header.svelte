@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ProgressOverall from '$lib/components/ProgressOverall.svelte';
+	import { Tabs } from '@skeletonlabs/skeleton-svelte';
 	import {
 		accordionCollapsed,
 		activeTab,
@@ -9,8 +9,8 @@
 		searchTerm,
 		taskStatus
 	} from '$lib/stores.svelte';
+	import ProgressOverall from '$lib/components/ProgressOverall.svelte';
 	import { ListChecksIcon, SearchIcon, TagsIcon, XIcon } from '@lucide/svelte';
-	import { Tabs } from '@skeletonlabs/skeleton-svelte';
 	const iconSize = 16;
 
 	let searchHasContent = $state(false);

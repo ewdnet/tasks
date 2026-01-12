@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { CategoryItem } from '$lib/types';
 	import { categorySelected, searchTerm, taskStatus } from '$lib/stores.svelte';
-	import { ListChecksIcon, RefreshCcwIcon } from '@lucide/svelte';
 	import { Portal, Tooltip } from '@skeletonlabs/skeleton-svelte';
+	import { ListChecksIcon, RefreshCcwIcon } from '@lucide/svelte';
+	const iconSize = 16;
 
 	let { categories } = $props<{ categories: CategoryItem[] }>();
 
@@ -15,7 +16,7 @@
 	});
 </script>
 
-<ListChecksIcon size={24} />
+<ListChecksIcon />
 <span>
 	{#if searchTerm.value !== ''}
 		Search "{searchTerm.value}" in
@@ -40,7 +41,7 @@
 			onclick={() => (categorySelected.value = '')}
 			class="btn-icon btn btn-icon-sm rounded-full preset-outlined-primary-500 bg-primary-500/15"
 		>
-			<RefreshCcwIcon size={16} />
+			<RefreshCcwIcon size={iconSize} />
 		</Tooltip.Trigger>
 		<Portal>
 			<Tooltip.Positioner>

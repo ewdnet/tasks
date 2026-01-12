@@ -5,10 +5,10 @@
 	import { activeTab, paginatorReset } from '$lib/stores.svelte';
 	import { animation } from '$lib/animationCss';
 	import { TrashIcon, XIcon } from '@lucide/svelte';
+	const iconSize = 16;
 
 	let { category } = $props<{ category: { id: string; name: string } }>();
 
-	const iconSize = 16;
 	let open = $state(false);
 </script>
 

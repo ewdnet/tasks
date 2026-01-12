@@ -1,7 +1,9 @@
 <script lang="ts">
 	import type { TaskItem } from '$lib/types';
-	import { categorySelected, activeTab, accordionCollapsed } from '$lib/stores.svelte';
 	import { Accordion, Portal, Progress, Tooltip } from '@skeletonlabs/skeleton-svelte';
+	import { categorySelected, activeTab, accordionCollapsed } from '$lib/stores.svelte';
+	import CategoryDelete from '$lib/components/CategoryDelete.svelte';
+
 	import { slide } from 'svelte/transition';
 	import {
 		ChevronDownIcon,
@@ -9,12 +11,11 @@
 		CircleDashedIcon,
 		CircleOffIcon
 	} from '@lucide/svelte';
-	import CategoryDelete from './CategoryDelete.svelte';
 	const iconSize = 16;
 
 	let { category } = $props();
 
-	const categoryProgress = (): number => {
+	const categoryProgress = () => {
 		const total = category.tasks?.length ?? 0;
 		if (total === 0) return 0;
 		const sum = category.tasks?.reduce((acc: number, e: TaskItem) => acc + e.progress, 0) ?? 0;

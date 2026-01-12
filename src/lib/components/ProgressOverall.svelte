@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { progressOverall } from '$lib/stores.svelte';
 	import { Portal, Progress, Tooltip } from '@skeletonlabs/skeleton-svelte';
+
 	let value = $derived(progressOverall.value);
 
 	let rangeClass: string = $state('');

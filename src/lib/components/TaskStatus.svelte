@@ -11,7 +11,7 @@
 
 	let { tasks } = $props<{ tasks: TaskItem[] }>();
 
-	function baseTasksForCounts() {
+	const baseTasksForCounts = () => {
 		let result = tasks;
 
 		if (categorySelected.value !== '') {
@@ -27,7 +27,7 @@
 		}
 
 		return result;
-	}
+	};
 
 	// New Tasks
 	function newTasks() {
