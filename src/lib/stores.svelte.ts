@@ -33,6 +33,9 @@ function refString(initial: string) {
 // tasks overall progress
 export const progressOverall = refNumber<number | null>(null);
 
+// Tabs (Skeleten UI) - active tab onValueChange
+export const activeTab = refString('tasks');
+
 // searchTerm
 export const searchTerm = refString('');
 
@@ -50,6 +53,3 @@ export const paginatorReset = refNumber<number>(1);
 
 // Accordion (Skeleton UI) - collapse trigger counter
 export const accordionCollapsed = refNumber<number>(0);
-
-// Tabs (Skeleten UI) - active tab onValueChange
-export const activeTab = refString('tasks');

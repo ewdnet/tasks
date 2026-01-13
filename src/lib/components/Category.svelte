@@ -134,7 +134,7 @@
 					<span>
 						{#if categoryProgress() === 100}
 							{@render complCat()}
-						{:else if categoryProgress() > 0 && categoryProgress() < 100}
+						{:else if categoryProgress() < 100 && categoryProgress() > 0}
 							{@render progrCat()}
 						{:else if category.tasks.length > 0 && categoryProgress() === 0}
 							{@render newCat()}
@@ -149,7 +149,7 @@
 				</Accordion.ItemIndicator>
 			</Accordion.ItemTrigger>
 			<div class="absolute bottom-0 left-0 w-full px-4">
-				<Progress value={categoryProgress()} class="">
+				<Progress value={categoryProgress()}>
 					<Progress.Track class="h-0.5 bg-error-500/20">
 						<Progress.Range
 							class={categoryProgress() === 100 ? 'bg-success-500/40' : 'bg-warning-500/50'}
