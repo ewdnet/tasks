@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { TaskItem } from '$lib/types';
 	import { Accordion, Portal, Progress, Tooltip } from '@skeletonlabs/skeleton-svelte';
-	import { categorySelected, activeTab, accordionCollapsed } from '$lib/stores.svelte';
+	import { categorySelected, activeTab, accordionReset } from '$lib/stores.svelte';
 	import CategoryDelete from '$lib/components/CategoryDelete.svelte';
 
 	import { slide } from 'svelte/transition';
@@ -168,7 +168,7 @@
 									onclick={() => (
 										(categorySelected.value = category.id),
 										(activeTab.value = 'tasks'),
-										(accordionCollapsed.value += 1)
+										(accordionReset.value = [])
 									)}
 									class="anchor text-xs">Show all Tasks in the Category {category.name}</button
 								>

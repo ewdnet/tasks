@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
 	import {
-		accordionCollapsed,
+		accordionReset,
 		activeTab,
 		categorySelected,
 		categoryStatus,
@@ -13,13 +13,13 @@
 	import { ListChecksIcon, SearchIcon, TagsIcon, XIcon } from '@lucide/svelte';
 	const iconSize = 16;
 
-	let searchHasContent = $state(false);
+	let searchHadContent = false;
 	$effect(() => {
 		const hasContent = searchTerm.value.length > 0;
-		if (hasContent && !searchHasContent) {
-			accordionCollapsed.value += 1;
+		if (hasContent && !searchHadContent) {
+			accordionReset.value = [];
 		}
-		searchHasContent = hasContent;
+		searchHadContent = hasContent;
 	});
 </script>
 
@@ -44,7 +44,7 @@
 						size={iconSize}
 						onclick={() => {
 							searchTerm.value = '';
-							accordionCollapsed.value += 1;
+							accordionReset.value = [];
 						}}
 					/>
 				{/if}
@@ -62,14 +62,15 @@
 		>
 			<Tabs.List>
 				<Tabs.Trigger
-					onclick={() => (
-						(searchTerm.value = ''),
-						(taskStatus.value = ''),
-						(categoryStatus.value = ''),
-						(categorySelected.value = ''),
-						(paginatorReset.value = 1),
-						(activeTab.value = 'tasks')
-					)}
+					onclick={() => {
+						searchTerm.value = '';
+						taskStatus.value = '';
+						categoryStatus.value = '';
+						categorySelected.value = '';
+						accordionReset.value = [];
+						paginatorReset.value = 1;
+						activeTab.value = 'tasks';
+					}}
 					value="tasks"
 					class="preset-tonal text-xs sm:text-sm"
 				>
@@ -77,14 +78,15 @@
 					Tasks
 				</Tabs.Trigger>
 				<Tabs.Trigger
-					onclick={() => (
-						(searchTerm.value = ''),
-						(taskStatus.value = ''),
-						(categoryStatus.value = ''),
-						(categorySelected.value = ''),
-						(paginatorReset.value = 1),
-						(activeTab.value = 'categories')
-					)}
+					onclick={() => {
+						searchTerm.value = '';
+						taskStatus.value = '';
+						categoryStatus.value = '';
+						categorySelected.value = '';
+						accordionReset.value = [];
+						paginatorReset.value = 1;
+						activeTab.value = 'categories';
+					}}
 					value="categories"
 					class="preset-tonal text-xs sm:text-sm"
 				>

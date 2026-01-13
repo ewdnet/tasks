@@ -3,10 +3,6 @@
 		"svelte": {
 			"url": "https://mcp.svelte.dev/mcp",
 			"type": "http"
-		},
-		"skeleton-svelte": {
-			"url": "https://www.skeleton.dev/llms-svelte.txt",
-			"type": "http"
 		}
 	},
 	"inputs": []

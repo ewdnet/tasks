@@ -1,5 +1,19 @@
 // REFS
 
+// refStringArray
+function refStringArray(initial: string[]) {
+	let value: string[] = $state(initial);
+
+	return {
+		get value() {
+			return value;
+		},
+		set value(v: string[]) {
+			value = v;
+		}
+	};
+}
+
 // refNumber
 function refNumber<T extends number | null>(initial: T) {
 	let value: T = $state(initial);
@@ -51,5 +65,5 @@ export const taskStatus = refString('');
 // Paginator Reset (scips to page 1 when filters change)
 export const paginatorReset = refNumber<number>(1);
 
-// Accordion (Skeleton UI) - collapse trigger counter
-export const accordionCollapsed = refNumber<number>(0);
+// Accordion (Skeleton UI) - reset accordion state
+export const accordionReset = refStringArray(['']);

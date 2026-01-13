@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { CategoryItem, TaskItem } from '$lib/types';
-	import { accordionCollapsed, categorySelected } from '$lib/stores.svelte';
+	import { accordionReset, categorySelected } from '$lib/stores.svelte';
 	import TaskDelete from '$lib/components/TaskDelete.svelte';
 	import TaskUpdate from '$lib/components/TaskUpdate.svelte';
 
@@ -13,7 +13,7 @@
 		<small>{categories.find((c: CategoryItem) => c.id === task.categoryId)?.name}</small>
 	{:else}
 		<button
-			onclick={() => ((categorySelected.value = task.categoryId), (accordionCollapsed.value += 1))}
+			onclick={() => ((categorySelected.value = task.categoryId), (accordionReset.value = []))}
 			class="anchor text-xs"
 			>{categories.find((c: CategoryItem) => c.id === task.categoryId)?.name}</button
 		>

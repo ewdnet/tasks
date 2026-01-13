@@ -5,7 +5,7 @@
 		activeTab,
 		searchTerm,
 		taskStatus,
-		accordionCollapsed
+		accordionReset
 	} from '$lib/stores.svelte';
 	import { Portal, Tooltip } from '@skeletonlabs/skeleton-svelte';
 
@@ -50,10 +50,10 @@
 			<Tooltip positioning={{ placement: 'top' }}>
 				<Tooltip.Trigger
 					type="button"
-					onclick={() => (
-						(taskStatus.value = taskStatus.value === 'new' ? '' : 'new'),
-						(accordionCollapsed.value += 1)
-					)}
+					onclick={() => {
+						taskStatus.value = taskStatus.value === 'new' ? '' : 'new';
+						accordionReset.value = [];
+					}}
 					disabled={newTasks() === 0}
 					class="btn-icon btn btn-icon-sm rounded-full border border-error-500 bg-error-500/15"
 				>
@@ -77,10 +77,10 @@
 			<Tooltip positioning={{ placement: 'top' }}>
 				<Tooltip.Trigger
 					type="button"
-					onclick={() => (
-						(taskStatus.value = taskStatus.value === 'current' ? '' : 'current'),
-						(accordionCollapsed.value += 1)
-					)}
+					onclick={() => {
+						taskStatus.value = taskStatus.value === 'current' ? '' : 'current';
+						accordionReset.value = [];
+					}}
 					disabled={inprogressTasks() === 0}
 					class="btn-icon btn btn-icon-sm rounded-full border border-warning-500 bg-warning-500/15"
 				>
@@ -108,10 +108,10 @@
 			<Tooltip positioning={{ placement: 'top' }}>
 				<Tooltip.Trigger
 					type="button"
-					onclick={() => (
-						(taskStatus.value = taskStatus.value === 'completed' ? '' : 'completed'),
-						(accordionCollapsed.value += 1)
-					)}
+					onclick={() => {
+						taskStatus.value = taskStatus.value === 'completed' ? '' : 'completed';
+						accordionReset.value = [];
+					}}
 					disabled={completedTasks() === 0}
 					class="btn-icon btn btn-icon-sm rounded-full border border-success-500 bg-success-500/15"
 				>
