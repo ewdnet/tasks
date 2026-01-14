@@ -9,6 +9,7 @@
 	import CategoriesDeleting from '$lib/components/CategoriesDeleting.svelte';
 	import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/svelte';
 	import { accordionReset, categoryStatus, paginatorReset, searchTerm } from '$lib/stores.svelte';
+	import { fade } from 'svelte/transition';
 
 	let { categories } = $props<{ categories: CategoryItem[] }>();
 
@@ -33,52 +34,57 @@
 			{/each}
 		</ul>
 	</Accordion>
-	<footer class="flex justify-between gap-8">
-		<div class="flex items-center gap-2">
-			<small>
-				{#if categoryStatus.value !== '' || searchTerm.value !== ''}
-					Filtered Categories:
-				{:else}
-					Total Categories:
+	{#key paginatedCategories}
+		<footer
+			class="flex flex-wrap justify-between gap-8"
+			in:fade={{ delay: 100 * paginatedCategories.length, duration: 100 }}
+		>
+			<div class="flex items-center gap-2">
+				<small>
+					{#if categoryStatus.value !== '' || searchTerm.value !== ''}
+						Filtered Categories:
+					{:else}
+						Total Categories:
+					{/if}
+					{categories.length}
+				</small>
+				{#if categories.length > 1}
+					<CategoriesDeleting {categories} />
 				{/if}
-				{categories.length}
-			</small>
-			{#if categories.length > 1}
-				<CategoriesDeleting {categories} />
+			</div>
+			{#if categories.length > PAGE_SIZE}
+				<Pagination
+					defaultPage={1}
+					count={categories.length}
+					pageSize={PAGE_SIZE}
+					{page}
+					onPageChange={(event: { page: number }) => {
+						paginatorReset.value = event.page;
+					}}
+				>
+					<Pagination.PrevTrigger>
+						<ArrowLeftIcon class="size-4" />
+					</Pagination.PrevTrigger>
+					<Pagination.Context>
+						{#snippet children(pagination)}
+							{#each pagination().pages as page, index (page)}
+								{#if page.type === 'page'}
+									<Pagination.Item {...page}>
+										{page.value}
+									</Pagination.Item>
+								{:else}
+									<Pagination.Ellipsis {index}>&#8230;</Pagination.Ellipsis>
+								{/if}
+							{/each}
+						{/snippet}
+					</Pagination.Context>
+					<Pagination.NextTrigger>
+						<ArrowRightIcon class="size-4" />
+					</Pagination.NextTrigger>
+				</Pagination>
 			{/if}
-		</div>
-		{#if categories.length > PAGE_SIZE}
-			<Pagination
-				defaultPage={1}
-				count={categories.length}
-				pageSize={PAGE_SIZE}
-				{page}
-				onPageChange={(event: { page: number }) => {
-					paginatorReset.value = event.page;
-				}}
-			>
-				<Pagination.PrevTrigger>
-					<ArrowLeftIcon class="size-4" />
-				</Pagination.PrevTrigger>
-				<Pagination.Context>
-					{#snippet children(pagination)}
-						{#each pagination().pages as page, index (page)}
-							{#if page.type === 'page'}
-								<Pagination.Item {...page}>
-									{page.value}
-								</Pagination.Item>
-							{:else}
-								<Pagination.Ellipsis {index}>&#8230;</Pagination.Ellipsis>
-							{/if}
-						{/each}
-					{/snippet}
-				</Pagination.Context>
-				<Pagination.NextTrigger>
-					<ArrowRightIcon class="size-4" />
-				</Pagination.NextTrigger>
-			</Pagination>
-		{/if}
-	</footer>
+		</footer>
+	{/key}
 {:else}
 	<p class="py-4 text-center">No Categories found.</p>
 {/if}
