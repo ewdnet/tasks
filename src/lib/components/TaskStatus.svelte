@@ -13,11 +13,9 @@
 
 	const baseTasksForCounts = () => {
 		let result = tasks;
-
 		if (categorySelected.value !== '') {
 			result = result.filter((task: TaskItem) => task.categoryId === categorySelected.value);
 		}
-
 		if (activeTab.value === 'tasks' && searchTerm.value.length > 0) {
 			const q = searchTerm.value.toLowerCase();
 			result = result.filter(
@@ -25,7 +23,6 @@
 					task.title.toLowerCase().includes(q) || task.content?.toLowerCase().includes(q)
 			);
 		}
-
 		return result;
 	};
 
@@ -33,12 +30,12 @@
 	const newTasks = () => {
 		return baseTasksForCounts().filter((task: TaskItem) => task.progress === 0).length;
 	};
-	// In Progress Tasks
+	// Tasks in Progress
 	const inprogressTasks = () => {
 		return baseTasksForCounts().filter((task: TaskItem) => task.progress > 0 && task.progress < 100)
 			.length;
 	};
-	// In Progress Tasks
+	// Completed Tasks
 	const completedTasks = () => {
 		return baseTasksForCounts().filter((task: TaskItem) => task.progress === 100).length;
 	};
