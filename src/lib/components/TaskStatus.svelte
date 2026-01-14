@@ -30,18 +30,18 @@
 	};
 
 	// New Tasks
-	function newTasks() {
+	const newTasks = () => {
 		return baseTasksForCounts().filter((task: TaskItem) => task.progress === 0).length;
-	}
+	};
 	// In Progress Tasks
-	function inprogressTasks() {
+	const inprogressTasks = () => {
 		return baseTasksForCounts().filter((task: TaskItem) => task.progress > 0 && task.progress < 100)
 			.length;
-	}
+	};
 	// In Progress Tasks
-	function completedTasks() {
+	const completedTasks = () => {
 		return baseTasksForCounts().filter((task: TaskItem) => task.progress === 100).length;
-	}
+	};
 </script>
 
 {#if tasks.length}

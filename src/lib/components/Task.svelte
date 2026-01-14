@@ -16,7 +16,7 @@
 	let value = $derived(task.progress);
 </script>
 
-<li class="overflow-hidden card preset-filled-surface-50-950">
+<li class="overflow-hidden card bg-surface-50-950/70">
 	<Accordion.Item value={task.id}>
 		<h2 class="relative h4">
 			<Accordion.ItemTrigger class="flex items-center justify-between gap-2 font-bold">
