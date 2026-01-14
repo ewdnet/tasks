@@ -8,7 +8,6 @@
 	import Category from '$lib/components/Category.svelte';
 	import CategoriesDeleting from '$lib/components/CategoriesDeleting.svelte';
 	import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/svelte';
-	import { fade } from 'svelte/transition';
 	import { accordionReset, categoryStatus, paginatorReset, searchTerm } from '$lib/stores.svelte';
 
 	let { categories } = $props<{ categories: CategoryItem[] }>();
@@ -28,13 +27,11 @@
 		value={accordionReset.value}
 		collapsible
 	>
-		{#key categoryStatus.value || paginatorReset.value}
-			<ul class="space-y-2 pb-4" in:fade>
-				{#each paginatedCategories as category (category.id)}
-					<Category {category} />
-				{/each}
-			</ul>
-		{/key}
+		<ul class="space-y-2 pb-4">
+			{#each paginatedCategories as category, index (category.id)}
+				<Category {category} {index} />
+			{/each}
+		</ul>
 	</Accordion>
 	<footer class="flex justify-between gap-8">
 		<div class="flex items-center gap-2">

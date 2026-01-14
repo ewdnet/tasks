@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { TaskItem } from '$lib/types';
+	import type { CategoryItem, TaskItem } from '$lib/types';
 	import { Accordion, Portal, Progress, Tooltip } from '@skeletonlabs/skeleton-svelte';
 	import { categorySelected, activeTab, accordionReset } from '$lib/stores.svelte';
 	import CategoryDelete from '$lib/components/CategoryDelete.svelte';
@@ -13,7 +13,7 @@
 	} from '@lucide/svelte';
 	const iconSize = 16;
 
-	let { category } = $props();
+	let { category, index } = $props<{ category: CategoryItem; index: number }>();
 
 	const categoryProgress = () => {
 		const total = category.tasks?.length ?? 0;
@@ -126,9 +126,13 @@
 	</span>
 {/snippet}
 
-<li class="overflow-hidden card bg-surface-50-950/70">
+<li
+	class="overflow-hidden card bg-surface-50-950/70"
+	in:slide={{ delay: 100 * index, duration: 100 }}
+	out:slide={{ duration: 100 }}
+>
 	<Accordion.Item value={category.id}>
-		<h2 class="relative h4">
+		<h2 class="h4">
 			<Accordion.ItemTrigger class="flex items-center justify-between gap-2 font-bold">
 				<div class="flex items-center gap-2">
 					<span>
@@ -148,7 +152,7 @@
 					<ChevronDownIcon class="h-5 w-5 transition group-data-[state=open]:rotate-180" />
 				</Accordion.ItemIndicator>
 			</Accordion.ItemTrigger>
-			<div class="absolute bottom-0 left-0 w-full px-4">
+			<div class="-mt-0.5 px-4">
 				<Progress value={categoryProgress()}>
 					<Progress.Track class="h-0.5 bg-error-500/20">
 						<Progress.Range

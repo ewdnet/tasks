@@ -8,7 +8,7 @@
 	import { Toast } from '@skeletonlabs/skeleton-svelte';
 	import { toaster } from '$lib/toaster';
 	import { getFlash } from 'sveltekit-flash-message';
-	import { scale } from 'svelte/transition';
+	import { fade, scale } from 'svelte/transition';
 
 	let { children } = $props();
 
@@ -63,7 +63,7 @@
 </header>
 <main class="flex-auto {outer}">
 	{#key activeTab.value}
-		<article class={inner} in:scale>
+		<article class={inner} in:fade={{ delay: 200, duration: 200 }} out:fade={{ duration: 200 }}>
 			{@render children()}
 		</article>
 	{/key}

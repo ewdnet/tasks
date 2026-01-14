@@ -15,7 +15,6 @@
 	import TasksDeleting from '$lib/components/TasksDeleting.svelte';
 	import Task from '$lib/components/Task.svelte';
 	import { Accordion, Pagination } from '@skeletonlabs/skeleton-svelte';
-	import { fade } from 'svelte/transition';
 	import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/svelte';
 	const iconSize = 16;
 
@@ -39,13 +38,11 @@
 		value={accordionReset.value}
 		collapsible
 	>
-		{#key taskStatus.value || categorySelected.value || paginatorReset.value}
-			<ul class="space-y-2 pb-4" in:fade>
-				{#each paginatedTasks as task (task.id)}
-					<Task {task} {categories} />
-				{/each}
-			</ul>
-		{/key}
+		<ul class="space-y-2 pb-4">
+			{#each paginatedTasks as task, index (task.id)}
+				<Task {task} {categories} {index} />
+			{/each}
+		</ul>
 	</Accordion>
 
 	<footer class="flex flex-wrap justify-between gap-8">
