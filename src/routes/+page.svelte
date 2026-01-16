@@ -1,6 +1,4 @@
 <script lang="ts">
-	import type { PageProps } from './$types';
-	import type { CategoryItem, TaskItem } from '$lib/types';
 	import Tasks from '$lib/components/Tasks.svelte';
 	import Categories from '$lib/components/Categories.svelte';
 	import TaskCreate from '$lib/components/TaskCreate.svelte';
@@ -18,108 +16,56 @@
 		searchTerm,
 		activeTab
 	} from '$lib/stores.svelte';
+	import type { PageProps } from './$types';
+	import type { CategoryItem, TaskItem } from '$lib/types';
+	import { computeOverallProgress, filterCategories, filterTasks } from '$lib/utils';
 	import { Tabs } from '@skeletonlabs/skeleton-svelte';
 
 	const { data } = $props() as PageProps;
-	let categories = $state<CategoryItem[]>([]);
-	let tasks = $state<TaskItem[]>([]);
+	const categories = $derived<CategoryItem[]>(data.categories);
+	const tasks = $derived<TaskItem[]>(data.tasks);
 
-	type CategoryTaskItem = CategoryItem extends { tasks: Array<infer T> } ? T : never;
+	const filters = $derived.by(() => ({
+		activeTab: activeTab.value,
+		searchTerm: searchTerm.value,
+		categoryStatus: categoryStatus.value,
+		categorySelected: categorySelected.value,
+		taskStatus: taskStatus.value
+	}));
 
-	let filteredCategories = $state<typeof data.categories>([]);
-	let filteredTasks = $state<typeof data.tasks>([]);
+	const filteredCategories = $derived.by(() =>
+		filterCategories(categories, {
+			activeTab: filters.activeTab,
+			searchTerm: filters.searchTerm,
+			categoryStatus: filters.categoryStatus
+		})
+	);
+
+	const filteredTasks = $derived.by(() =>
+		filterTasks(tasks, {
+			activeTab: filters.activeTab,
+			categorySelected: filters.categorySelected,
+			searchTerm: filters.searchTerm,
+			taskStatus: filters.taskStatus
+		})
+	);
+
+	const overallProgress = $derived.by(() => computeOverallProgress(tasks));
 
 	$effect(() => {
-		categories = data.categories;
-		tasks = data.tasks;
+		progressOverall.value = overallProgress;
 	});
 
 	$effect(() => {
-		const total = tasks.length;
-		if (total === 0) {
-			progressOverall.value = null;
-			return;
-		}
+		const resetInputs = [
+			filters.activeTab,
+			filters.searchTerm,
+			filters.taskStatus,
+			filters.categoryStatus,
+			filters.categorySelected
+		];
 
-		let sum = 0;
-		for (const task of tasks) sum += task.progress;
-		progressOverall.value = Math.round(sum / total);
-	});
-
-	// Filtering
-	$effect(() => {
-		// Reset pagination when filters change
-		void activeTab.value;
-		void searchTerm.value;
-		void taskStatus.value;
-		void categoryStatus.value;
-		void categorySelected.value;
-		paginatorReset.value = 1;
-	});
-
-	// filteredCategories (deterministic)
-	$effect(() => {
-		let result = categories;
-
-		if (activeTab.value === 'categories' && searchTerm.value.length > 0) {
-			const q = searchTerm.value.toLowerCase();
-			result = result.filter((category: CategoryItem) => category.name.toLowerCase().includes(q));
-		}
-
-		if (categoryStatus.value === 'emptycategories') {
-			result = result.filter((category: CategoryItem) => category.tasks.length === 0);
-		} else if (categoryStatus.value === 'newcategories') {
-			result = result.filter((category: CategoryItem) => {
-				return (
-					category.tasks.length > 0 &&
-					category.tasks.every((task: CategoryTaskItem) => task.progress === 0)
-				);
-			});
-		} else if (categoryStatus.value === 'inprogresscategories') {
-			result = result.filter(
-				(category: CategoryItem) =>
-					category.tasks.length > 0 &&
-					category.tasks.filter(
-						(task: CategoryTaskItem) => task.progress > 0 && task.progress < 100
-					).length
-			);
-		} else if (categoryStatus.value === 'completedcategories') {
-			result = result.filter(
-				(category: CategoryItem) =>
-					category.tasks.length > 0 &&
-					category.tasks.length ===
-						category.tasks.filter((task: CategoryTaskItem) => task.progress === 100).length
-			);
-		}
-
-		filteredCategories = result;
-	});
-
-	// filteredTasks (deterministic)
-	$effect(() => {
-		let result = tasks;
-
-		if (categorySelected.value !== '') {
-			result = result.filter((task: TaskItem) => task.categoryId === categorySelected.value);
-		}
-
-		if (activeTab.value === 'tasks' && searchTerm.value.length > 0) {
-			const q = searchTerm.value.toLowerCase();
-			result = result.filter(
-				(task: TaskItem) =>
-					task.title.toLowerCase().includes(q) || task.content?.toLowerCase().includes(q)
-			);
-		}
-
-		if (taskStatus.value === 'new') {
-			result = result.filter((task: TaskItem) => task.progress === 0);
-		} else if (taskStatus.value === 'current') {
-			result = result.filter((task: TaskItem) => task.progress > 0 && task.progress < 100);
-		} else if (taskStatus.value === 'completed') {
-			result = result.filter((task: TaskItem) => task.progress === 100);
-		}
-
-		filteredTasks = result;
+		if (resetInputs.length) paginatorReset.value = 1;
 	});
 </script>
 

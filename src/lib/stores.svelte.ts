@@ -1,21 +1,7 @@
-// REFS
+import type { CategoryStatusFilter, TabValue, TaskStatusFilter } from '$lib/types';
 
-// refStringArray
-function refStringArray(initial: string[]) {
-	let value: string[] = $state(initial);
-
-	return {
-		get value() {
-			return value;
-		},
-		set value(v: string[]) {
-			value = v;
-		}
-	};
-}
-
-// refNumber
-function refNumber<T extends number | null>(initial: T) {
+// Minimal typed refs for runes-driven state
+function ref<T>(initial: T) {
 	let value: T = $state(initial);
 
 	return {
@@ -28,15 +14,14 @@ function refNumber<T extends number | null>(initial: T) {
 	};
 }
 
-// refString
-function refString(initial: string) {
-	let value = $state(initial);
+function refArray<T>(initial: T[]) {
+	let value: T[] = $state(initial);
 
 	return {
 		get value() {
 			return value;
 		},
-		set value(v) {
+		set value(v: T[]) {
 			value = v;
 		}
 	};
@@ -45,25 +30,25 @@ function refString(initial: string) {
 // STORES
 
 // tasks overall progress
-export const progressOverall = refNumber<number | null>(null);
+export const progressOverall = ref<number | null>(null);
 
-// Tabs (Skeleten UI) - active tab onValueChange
-export const activeTab = refString('tasks');
+// Tabs (Skeleton UI) - active tab onValueChange
+export const activeTab = ref<TabValue>('tasks');
 
 // searchTerm
-export const searchTerm = refString('');
+export const searchTerm = ref('');
 
 // categories status
-export const categoryStatus = refString('');
+export const categoryStatus = ref<CategoryStatusFilter>('');
 
 // filter (category)
-export const categorySelected = refString('');
+export const categorySelected = ref('');
 
 // filter (status)
-export const taskStatus = refString('');
+export const taskStatus = ref<TaskStatusFilter>('');
 
-// Paginator Reset (scips to page 1 when filters change)
-export const paginatorReset = refNumber<number>(1);
+// Paginator Reset (skips to page 1 when filters change)
+export const paginatorReset = ref<number>(1);
 
 // Accordion (Skeleton UI) - reset accordion state
-export const accordionReset = refStringArray(['']);
+export const accordionReset = refArray<string>(['']);

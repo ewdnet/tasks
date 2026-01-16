@@ -1,4 +1,5 @@
 import type { PageServerLoad } from './$types';
+import type { RequestEvent } from '@sveltejs/kit';
 import {
 	categoryCreate,
 	idMultipleSchema,
@@ -12,6 +13,26 @@ import { db } from '$lib/server/db';
 import { category, task } from '$lib/server/db/schema';
 import { and, eq, inArray, not } from 'drizzle-orm';
 import { fail, superValidate } from 'sveltekit-superforms';
+
+type FlashType = 'error' | 'warning' | 'success' | 'info';
+
+function flashAndFail(
+	event: RequestEvent,
+	type: FlashType,
+	message: string,
+	form: unknown,
+	status = 400
+) {
+	setFlash({ type, message }, event.cookies);
+	return fail(status, { form });
+}
+
+function parseIds(raw: string) {
+	return raw
+		.split(',')
+		.map((id) => id.trim())
+		.filter(Boolean);
+}
 
 export const load = (async () => {
 	const getCategories = async () => {
@@ -44,12 +65,13 @@ export const load = (async () => {
 
 export const actions = {
 	category_create: async (event) => {
-		const formData = await event.request.formData();
-		const form = await superValidate(formData, valibot(categoryCreate));
+		const form = await superValidate(event, valibot(categoryCreate));
 
 		if (!form.valid) {
-			setFlash({ type: 'error', message: form.errors.name }, event.cookies);
-			return fail(400, { form });
+			const message = Array.isArray(form.errors.name)
+				? form.errors.name.join(' ')
+				: (form.errors.name ?? 'Invalid category name.');
+			return flashAndFail(event, 'error', message, form);
 		}
 
 		const existingName = await db.query.category.findFirst({
@@ -57,8 +79,7 @@ export const actions = {
 		});
 
 		if (existingName) {
-			setFlash({ type: 'error', message: 'Category name already exists.' }, event.cookies);
-			return fail(400, { form });
+			return flashAndFail(event, 'error', 'Category name already exists.', form);
 		}
 
 		const { name } = form.data;
@@ -77,8 +98,7 @@ export const actions = {
 		setFlash({ type: 'success', message: 'Category created successfully.' }, event.cookies);
 	},
 	category_delete: async (event) => {
-		const formData = await event.request.formData();
-		const form = await superValidate(formData, valibot(idSchema));
+		const form = await superValidate(event, valibot(idSchema));
 		const { id } = form.data;
 
 		if (!form.valid) return fail(400, { form });
@@ -96,22 +116,16 @@ export const actions = {
 		setFlash({ type: 'success', message: 'Category deleted successfully.' }, event.cookies);
 	},
 	category_delete_multiple: async (event) => {
-		const formData = await event.request.formData();
-		const form = await superValidate(formData, valibot(idMultipleSchema));
+		const form = await superValidate(event, valibot(idMultipleSchema));
 
 		if (!form.valid) {
 			const msg = Array.isArray(form.errors.id) ? form.errors.id.join(' ') : form.errors.id;
-			setFlash({ type: 'error', message: msg ?? 'No categories selected.' }, event.cookies);
-			return fail(400, { form });
+			return flashAndFail(event, 'error', msg ?? 'No categories selected.', form);
 		}
 
-		const ids = form.data.id
-			.split(',')
-			.map((id) => id.trim())
-			.filter(Boolean);
+		const ids = parseIds(form.data.id);
 		if (ids.length === 0) {
-			setFlash({ type: 'error', message: 'No categories selected.' }, event.cookies);
-			return fail(400, { form });
+			return flashAndFail(event, 'error', 'No categories selected.', form);
 		}
 
 		try {
@@ -130,13 +144,11 @@ export const actions = {
 		);
 	},
 	task_create: async (event) => {
-		const formData = await event.request.formData();
-		const form = await superValidate(formData, valibot(taskCreate));
+		const form = await superValidate(event, valibot(taskCreate));
 
 		if (!form.valid) {
 			const errors = Object.values(form.errors).join(' ');
-			setFlash({ type: 'error', message: errors }, event.cookies);
-			return fail(400, { form });
+			return flashAndFail(event, 'error', errors, form);
 		}
 
 		const existingTitle = await db.query.task.findFirst({
@@ -144,8 +156,7 @@ export const actions = {
 		});
 
 		if (existingTitle) {
-			setFlash({ type: 'error', message: 'Task title already exists.' }, event.cookies);
-			return fail(400, { form });
+			return flashAndFail(event, 'error', 'Task title already exists.', form);
 		}
 
 		const id = crypto.randomUUID() as string;
@@ -167,13 +178,11 @@ export const actions = {
 		setFlash({ type: 'success', message: 'Task created successfully.' }, event.cookies);
 	},
 	task_update: async (event) => {
-		const formData = await event.request.formData();
-		const form = await superValidate(formData, valibot(taskSchema));
+		const form = await superValidate(event, valibot(taskSchema));
 
 		if (!form.valid) {
 			const errors = Object.values(form.errors).join(' ');
-			setFlash({ type: 'error', message: errors }, event.cookies);
-			return fail(400, { form });
+			return flashAndFail(event, 'error', errors, form);
 		}
 
 		const existingTitle = await db.query.task.findFirst({
@@ -181,8 +190,7 @@ export const actions = {
 		});
 
 		if (existingTitle) {
-			setFlash({ type: 'error', message: 'Task title already exists.' }, event.cookies);
-			return fail(400, { form });
+			return flashAndFail(event, 'error', 'Task title already exists.', form);
 		}
 
 		const { id, title, content, progress, categoryId } = form.data;
@@ -204,8 +212,7 @@ export const actions = {
 		setFlash({ type: 'success', message: 'Task updated successfully.' }, event.cookies);
 	},
 	task_delete: async (event) => {
-		const formData = await event.request.formData();
-		const form = await superValidate(formData, valibot(idSchema));
+		const form = await superValidate(event, valibot(idSchema));
 
 		const { id } = form.data;
 
@@ -224,22 +231,16 @@ export const actions = {
 		setFlash({ type: 'success', message: 'Task deleted successfully.' }, event.cookies);
 	},
 	task_delete_multiple: async (event) => {
-		const formData = await event.request.formData();
-		const form = await superValidate(formData, valibot(idMultipleSchema));
+		const form = await superValidate(event, valibot(idMultipleSchema));
 
 		if (!form.valid) {
 			const msg = Array.isArray(form.errors.id) ? form.errors.id.join(' ') : form.errors.id;
-			setFlash({ type: 'error', message: msg ?? 'No tasks selected.' }, event.cookies);
-			return fail(400, { form });
+			return flashAndFail(event, 'error', msg ?? 'No tasks selected.', form);
 		}
 
-		const ids = form.data.id
-			.split(',')
-			.map((id) => id.trim())
-			.filter(Boolean);
+		const ids = parseIds(form.data.id);
 		if (ids.length === 0) {
-			setFlash({ type: 'error', message: 'No tasks selected.' }, event.cookies);
-			return fail(400, { form });
+			return flashAndFail(event, 'error', 'No tasks selected.', form);
 		}
 
 		try {

@@ -23,3 +23,15 @@ export type TooltipTriggerAttrs = TooltipTriggerProps extends {
 }
 	? A[0]
 	: never;
+
+// Filter Types
+export type TabValue = 'tasks' | 'categories';
+
+export type TaskStatusFilter = '' | 'new' | 'current' | 'completed';
+
+export type CategoryStatusFilter =
+	| ''
+	| 'emptycategories'
+	| 'newcategories'
+	| 'inprogresscategories'
+	| 'completedcategories';

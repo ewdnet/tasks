@@ -9,6 +9,7 @@
 		searchTerm,
 		taskStatus
 	} from '$lib/stores.svelte';
+	import type { TabValue } from '$lib/types';
 	import ProgressOverall from '$lib/components/ProgressOverall.svelte';
 	import { ListChecksIcon, SearchIcon, TagsIcon, XIcon } from '@lucide/svelte';
 	const iconSize = 16;
@@ -54,8 +55,8 @@
 	<nav class="flex flex-row-reverse gap-2 border-t border-t-primary-200-800 pt-4">
 		<Tabs
 			defaultValue="tasks"
-			onValueChange={(event: { value: string }) => {
-				activeTab.value = event.value;
+			onValueChange={(event) => {
+				activeTab.value = event.value as TabValue;
 			}}
 			value={activeTab.value}
 			class="flex flex-row-reverse"
