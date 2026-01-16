@@ -8,7 +8,7 @@
 	import { Toast } from '@skeletonlabs/skeleton-svelte';
 	import { toaster } from '$lib/toaster';
 	import { getFlash } from 'sveltekit-flash-message';
-	import { fade, scale } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 
 	let { children } = $props();
 
