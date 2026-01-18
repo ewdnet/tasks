@@ -42,7 +42,7 @@
 					>
 						<fieldset class="py-4">
 							<label for="name" class="label">
-								<span class="label-text">Category Nme</span>
+								<span class="label-text">Category Name</span>
 								<input id="name" class="input" name="name" required />
 							</label>
 						</fieldset>
