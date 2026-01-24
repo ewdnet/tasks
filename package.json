@@ -8,6 +8,7 @@
 		"drizzle",
 		"sqlite"
 	],
+	"description": "Tasks with categories and progress bar. Realized with: Sveltekit, Skeleton UI, SuperForms, Valibot, Drizzle, SQLite Database.",
 	"private": true,
 	"version": "1.0.0",
 	"type": "module",
