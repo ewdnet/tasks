@@ -54,4 +54,3 @@ export const taskUpdate = object({
 	content: optional(string()),
 	categoryId: pipe(string(), nonEmpty('Category is required'))
 });
-
